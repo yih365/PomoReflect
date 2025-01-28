@@ -11,8 +11,7 @@ func scheduleCountdownNotifications(timerDuration: Int) {
     let notificationCenter = UNUserNotificationCenter.current()
     
     // Remove all delivered notifications
-//    UNUserNotificationCenter.current().removeAllDeliveredNotifications()
-//    print("scheduling countdown notif")
+// UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     
     let content = UNMutableNotificationContent()
     content.title = "Pomodoro Timer"
@@ -22,6 +21,28 @@ func scheduleCountdownNotifications(timerDuration: Int) {
    
     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(0.1), repeats: false)
     let request = UNNotificationRequest(identifier: "PomodoroTimer_pomo", content: content, trigger: trigger)
+    
+    notificationCenter.add(request) { error in
+        if let error = error {
+            print("Error scheduling notification: \(error.localizedDescription)")
+        }
+    }
+}
+
+func scheduleTimerEndNotifications() {
+    let notificationCenter = UNUserNotificationCenter.current()
+    
+    // Remove all delivered notifications
+    UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    
+    let content = UNMutableNotificationContent()
+    content.title = "Pomodoro Timer"
+    content.body = "Timer Ended!"
+    content.sound = .none
+    content.categoryIdentifier = "bannerCategory"
+   
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(0.1), repeats: false)
+    let request = UNNotificationRequest(identifier: "PomodoroTimer_pomo_alert", content: content, trigger: trigger)
     
     notificationCenter.add(request) { error in
         if let error = error {

@@ -51,7 +51,7 @@ struct TimerSettingsView: View {
                     }
                 }
                 
-                Toggle("Auto Start Breaks", isOn: $autoStartBreaks)
+                Toggle("Auto Start Breaks and Focus", isOn: $autoStartBreaks)
                                 .padding()
             }
             .navigationBarTitle("Settings", displayMode: .inline)
