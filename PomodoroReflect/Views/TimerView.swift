@@ -32,12 +32,13 @@ struct TimerView: View {
     // Settings
     // Auto start breaks and timer
     @State private var autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
+    @State private var selectedBackgroundNoise = TimerSettingsView.backgroundNoiseOptions[0]
 
     // List of pairs (timer name, duration in seconds)
     @State private var tabs = [
-        ("Focus",UserDefaults.standard.integer(forKey: "Focus") > 0 ? UserDefaults.standard.integer(forKey: "Focus") : 25 * 60),
-           ("Short Break",UserDefaults.standard.integer(forKey: "Short Break") > 0 ? UserDefaults.standard.integer(forKey: "Short Break") : 5 * 60),
-           ("Long Break",UserDefaults.standard.integer(forKey: "Long Break") > 0 ? UserDefaults.standard.integer(forKey: "Long Break") : 10 * 60)
+        ("Focus", 25 * 60),
+           ("Short Break", 5 * 60),
+           ("Long Break", 10 * 60)
     ]
     @State private var colors:[Color] = [.dullRed, .customBlue, .longBlue]
     
@@ -55,11 +56,11 @@ struct TimerView: View {
             
             VStack {
                 // Use the TopBar view here
-                TopBar(timerColor: colors[selectedTab],logoName: "leaf.fill", onSettingsTapped: {
+                TopBar(timerRunning:$isTimerRunning,timerColor: colors[selectedTab],logoName: "leaf.fill", onSettingsTapped: {
                     showSettings = true
                 })
                 .sheet(isPresented: $showSettings) {
-                    TimerSettingsView(tabs: $tabs, autoStartBreaks: $autoStartBreaks, onSave: {
+                    TimerSettingsView(tabs: $tabs, autoStartBreaks: $autoStartBreaks, selectedBackgroundNoise: $selectedBackgroundNoise, onSave: {
                         stopTimer()
                         remainingTimeInSecs = tabs[selectedTab].1
                     })
@@ -152,22 +153,25 @@ struct TimerView: View {
 //            }
         }
         .onAppear(
-            perform: loadDefaultTimers
+            perform: loadDefaultSettings
         )
-        }
+    }
     
-    private func loadDefaultTimers() {
+    private func loadDefaultSettings() {
             let focusTime = UserDefaults.standard.integer(forKey: "Focus")
             let shortBreakTime = UserDefaults.standard.integer(forKey: "Short Break")
             let longBreakTime = UserDefaults.standard.integer(forKey: "Long Break")
             
-        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
-//        tabs[0].1 = 5
+//        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
+        tabs[0].1 = 5
         tabs[1].1 = shortBreakTime > 0 ? shortBreakTime : tabs[1].1
 //        tabs[1].1 = 5
         tabs[2].1 = longBreakTime > 0 ? longBreakTime : tabs[2].1
             
         remainingTimeInSecs = tabs[0].1 // Default to focus time on load
+        
+        autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
+        selectedBackgroundNoise = UserDefaults.standard.string(forKey: "BGNoise") ?? TimerSettingsView.backgroundNoiseOptions[0]
     }
     
     func switchTab() {
@@ -189,7 +193,7 @@ struct TimerView: View {
     
     func startTimer() {
         isTimerRunning = true
-        AudioManager.shared.playSilentAudio()
+        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise)
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if remainingTimeInSecs > 0 {
                 remainingTimeInSecs -= 1
@@ -210,7 +214,7 @@ struct TimerView: View {
     
     func stopTimer() {
         isTimerRunning = false
-        AudioManager.shared.stopSilentAudio()
+        AudioManager.shared.stopBgAudio()
         timer?.invalidate()
         timer = nil
     }

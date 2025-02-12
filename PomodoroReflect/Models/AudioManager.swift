@@ -9,27 +9,49 @@ import AVFoundation
 
 class AudioManager {
     static let shared = AudioManager()
-    var silentAudioPlayer: AVAudioPlayer?
+    var bgAudioPlayer: AVAudioPlayer?
     var timerEndAudioPlayer: AVAudioPlayer?
-
-    func playSilentAudio() {
-        let silenceURL = Bundle.main.url(forResource: "silence", withExtension: "mp3")!
+    
+    func playBgAudio(selectedAudio: String) {
+        switch (selectedAudio) {
+            case TimerSettingsView.backgroundNoiseOptions[0]:
+                playSilentAudio()
+                break
+            case TimerSettingsView.backgroundNoiseOptions[1]:
+                playWhiteNoiseAudio()
+                break
+            default:
+                print("Error in selected audio.")
+        }
+    }
+    
+    func playBgAudio(url: URL) {
         do {
             // Set up the audio session for background playback
-            try AVAudioSession.sharedInstance().setCategory(.playback, options:[.mixWithOthers])
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options:[.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
             
-            // Play the silent audio file
-            silentAudioPlayer = try AVAudioPlayer(contentsOf: silenceURL)
-            silentAudioPlayer?.numberOfLoops = -1 // Loop indefinitely
-            silentAudioPlayer?.play()
+            // Play the audio file, with infinite loop
+            bgAudioPlayer = try AVAudioPlayer(contentsOf: url)
+            bgAudioPlayer?.numberOfLoops = -1 // Loop indefinitely
+            bgAudioPlayer?.play()
         } catch {
-            print("Error playing silent audio: \(error.localizedDescription)")
+            print("Error playing audio: \(error.localizedDescription)")
         }
     }
 
-    func stopSilentAudio() {
-        silentAudioPlayer?.stop()
+    func playSilentAudio() {
+        let silenceURL = Bundle.main.url(forResource: "silence", withExtension: "mp3")!
+        playBgAudio(url: silenceURL)
+    }
+    
+    func playWhiteNoiseAudio() {
+        let whiteNoiseURL = Bundle.main.url(forResource: "underwater-white-noise", withExtension: "mp3")!
+        playBgAudio(url: whiteNoiseURL)
+    }
+
+    func stopBgAudio() {
+        bgAudioPlayer?.stop()
         try? AVAudioSession.sharedInstance().setActive(false)
     }
     

@@ -11,15 +11,19 @@ import SwiftUI
 struct TimerSettingsView: View {
     @Binding var tabs: [(String,Int)] // Binding to pass and update default timers
     @Binding var autoStartBreaks: Bool
+    @Binding var selectedBackgroundNoise: String
     @State private var focusTime = ""
     @State private var shortBreakTime = ""
     @State private var longBreakTime = ""
     @Environment(\.dismiss) var dismiss
     var onSave: (() -> Void)? // Closure to handle save action
     
-    init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, onSave: (() -> Void)? = nil) {
+    static var backgroundNoiseOptions = ["None", "White Noise"]
+    
+    init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: (() -> Void)? = nil) {
         self._tabs = tabs
         self._autoStartBreaks = autoStartBreaks
+        self._selectedBackgroundNoise = selectedBackgroundNoise
         // Initialize state variables with formatted timer durations
         self._focusTime = State(initialValue: "\(tabs.wrappedValue[0].1 / 60)")
         self._shortBreakTime = State(initialValue: "\(tabs.wrappedValue[1].1 / 60)")
@@ -53,6 +57,13 @@ struct TimerSettingsView: View {
                 
                 Toggle("Auto Start Breaks and Focus", isOn: $autoStartBreaks)
                                 .padding()
+                
+                Picker("Background Noise", selection: $selectedBackgroundNoise) {
+                    ForEach(TimerSettingsView.backgroundNoiseOptions, id: \.self) { noise in
+                        Text(noise).tag(noise)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle()) // Dropdown style
             }
             .navigationBarTitle("Settings", displayMode: .inline)
             .navigationBarItems(trailing: Button("Save") {
@@ -68,6 +79,7 @@ struct TimerSettingsView: View {
                 
                 // Save to UserDefaults
                 UserDefaults.standard.set(autoStartBreaks, forKey: "autoStartBreaks")
+                UserDefaults.standard.set(selectedBackgroundNoise, forKey: "BGNoise")
 
                 onSave?()
                 

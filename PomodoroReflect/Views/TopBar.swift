@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct TopBar: View {
+    @Binding var timerRunning: Bool
     var timerColor: Color
     var logoName: String
     var onSettingsTapped: () -> Void
@@ -29,11 +30,27 @@ struct TopBar: View {
                     .resizable()
                     .frame(width: 30, height: 30)
                     .padding(.trailing)
-                    .foregroundColor(.white)
+//                    .foregroundColor(.white)
+                    .foregroundColor(getForegroundColor())
             }
         }
         .padding()
-        .background(timerColor)
+//        .background(timerColor)
+        .background(getBackgroundColor())
         .frame(maxWidth: .infinity)
+    }
+    
+    func getForegroundColor() -> Color {
+        if (timerRunning) {
+            return .white
+        }
+        return timerColor
+    }
+
+    func getBackgroundColor() -> Color {
+        if (timerRunning) {
+            return timerColor
+        }
+        return .white
     }
 }
