@@ -12,7 +12,15 @@ class AudioManager {
     var bgAudioPlayer: AVAudioPlayer?
     var timerEndAudioPlayer: AVAudioPlayer?
     
-    func playBgAudio(selectedAudio: String) {
+    func playBgAudio(selectedAudio: String, isFocusTimer: Bool) {
+        stopBgAudio()
+        
+        if (!isFocusTimer) {
+            // Play silent noise when not focus timer
+            playSilentAudio()
+            return
+        }
+        
         switch (selectedAudio) {
             case TimerSettingsView.backgroundNoiseOptions[0]:
                 playSilentAudio()

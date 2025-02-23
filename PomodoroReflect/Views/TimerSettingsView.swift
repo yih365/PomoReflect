@@ -16,11 +16,11 @@ struct TimerSettingsView: View {
     @State private var shortBreakTime = ""
     @State private var longBreakTime = ""
     @Environment(\.dismiss) var dismiss
-    var onSave: (() -> Void)? // Closure to handle save action
+    var onSave: ((Bool) -> Void)? // Closure to handle save action
     
     static var backgroundNoiseOptions = ["None", "White Noise"]
     
-    init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: (() -> Void)? = nil) {
+    init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: ((Bool) -> Void)? = nil) {
         self._tabs = tabs
         self._autoStartBreaks = autoStartBreaks
         self._selectedBackgroundNoise = selectedBackgroundNoise
@@ -67,21 +67,33 @@ struct TimerSettingsView: View {
             }
             .navigationBarTitle("Settings", displayMode: .inline)
             .navigationBarItems(trailing: Button("Save") {
+                let oldFocus = tabs[0].1
+                let oldShortTimer = tabs[1].1
+                let oldLongTimer = tabs[2].1
+                
                 // Save the user inputs to default timers
                 tabs[0].1 = Int(focusTime) != nil ? Int(focusTime)!*60 : tabs[0].1
                 tabs[1].1 = Int(shortBreakTime) != nil ? Int(shortBreakTime)!*60 : tabs[1].1
                 tabs[2].1 = Int(longBreakTime) != nil ? Int(longBreakTime)!*60 : tabs[2].1
                 
+                // If any timer duration is changed, set as parameter in save function
+                // so that save function can reset the timer
+                onSave?(oldFocus != tabs[0].1 || oldShortTimer != tabs[1].1 || oldLongTimer != tabs[2].1)
+
                 // Save to UserDefaults
-                UserDefaults.standard.set(tabs[0].1, forKey: tabs[0].0)
-                UserDefaults.standard.set(tabs[1].1, forKey: tabs[1].0)
-                UserDefaults.standard.set(tabs[2].1, forKey: tabs[2].0)
+                if (oldFocus != tabs[0].1) {
+                    UserDefaults.standard.set(tabs[0].1, forKey: tabs[0].0)
+                }
+                if (oldShortTimer != tabs[1].1) {
+                    UserDefaults.standard.set(tabs[1].1, forKey: tabs[1].0)
+                }
+                if (oldLongTimer != tabs[2].1) {
+                    UserDefaults.standard.set(tabs[2].1, forKey: tabs[2].0)
+                }
                 
                 // Save to UserDefaults
                 UserDefaults.standard.set(autoStartBreaks, forKey: "autoStartBreaks")
                 UserDefaults.standard.set(selectedBackgroundNoise, forKey: "BGNoise")
-
-                onSave?()
                 
                 dismiss()
             })

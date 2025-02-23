@@ -61,8 +61,12 @@ struct TimerView: View {
                 })
                 .sheet(isPresented: $showSettings) {
                     TimerSettingsView(tabs: $tabs, autoStartBreaks: $autoStartBreaks, selectedBackgroundNoise: $selectedBackgroundNoise, onSave: {
-                        stopTimer()
-                        remainingTimeInSecs = tabs[selectedTab].1
+                        (changedTimers: Bool) in
+                        playBgAudio()
+                        if (changedTimers) {
+                            stopTimer()
+                            remainingTimeInSecs = tabs[selectedTab].1
+                        }
                     })
                 }
                 
@@ -162,8 +166,8 @@ struct TimerView: View {
             let shortBreakTime = UserDefaults.standard.integer(forKey: "Short Break")
             let longBreakTime = UserDefaults.standard.integer(forKey: "Long Break")
             
-//        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
-        tabs[0].1 = 5
+        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
+//        tabs[0].1 = 5
         tabs[1].1 = shortBreakTime > 0 ? shortBreakTime : tabs[1].1
 //        tabs[1].1 = 5
         tabs[2].1 = longBreakTime > 0 ? longBreakTime : tabs[2].1
@@ -193,15 +197,18 @@ struct TimerView: View {
     
     func startTimer() {
         isTimerRunning = true
-        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise)
+        playBgAudio()
+        CountdownLiveActivity.shared.startLiveActivity(duration: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if remainingTimeInSecs > 0 {
                 remainingTimeInSecs -= 1
-                scheduleCountdownNotifications(timerDuration: remainingTimeInSecs)
+                CountdownLiveActivity.shared.updateLiveActivity(remainingTime: TimeInterval(remainingTimeInSecs))
+//                scheduleCountdownNotifications(timerDuration: remainingTimeInSecs)
             } else {
                 // Timer has finished
                 AudioManager.shared.playTimerEnd()
-                scheduleTimerEndNotifications()
+//                scheduleTimerEndNotifications()
+                CountdownLiveActivity.shared.stopLiveActivity()
                 if (selectedTab == 0) {
                     // Finished in Focus Mode
                     numCompleteFocusSessions += 1
@@ -210,6 +217,10 @@ struct TimerView: View {
                 switchTab()
             }
         }
+    }
+    
+    func playBgAudio() {
+        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise, isFocusTimer: selectedTab == 0)
     }
     
     func stopTimer() {

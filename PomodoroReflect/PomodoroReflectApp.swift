@@ -10,27 +10,27 @@ import SwiftData
 
 @main
 struct PomodoroReflectApp: App {
-//    static var notificationDelegate = NotificationDelegate()
     
     init() {
         print("init is called")
         requestNotificationPermission()
+        
             // Set the delegate to the static instance
 //        UNUserNotificationCenter.current().delegate = PomodoroReflectApp.notificationDelegate
         }
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+//    var sharedModelContainer: ModelContainer = {
+//        let schema = Schema([
+//            Item.self,
+//        ])
+//        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+//
+//        do {
+//            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+//        } catch {
+//            fatalError("Could not create ModelContainer: \(error)")
+//        }
+//    }()
     
     var body: some Scene {
         WindowGroup {
@@ -46,7 +46,7 @@ struct PomodoroReflectApp: App {
                 }
             }
         }
-        .modelContainer(sharedModelContainer)
+//        .modelContainer(sharedModelContainer)
     }
 }
 

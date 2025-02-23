@@ -4,10 +4,58 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>PomoWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>PomodoroReflect.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>PomodoroWidgetExtension.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>SharedModels.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>SharedModelsLibrary.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>4B2081CF2CBDCB11002012B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4B2081E12CBDCB12002012B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4B2081EB2CBDCB12002012B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4B9265022D6695DB0034A270</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4BF75EB62D62EA1400A38EC0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
