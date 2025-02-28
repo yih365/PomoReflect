@@ -9,25 +9,20 @@ import SwiftUI
 import AppIntents
 
 struct PomoLiveIntent: LiveActivityIntent {
-    init() {
-        
+    static var title: LocalizedStringResource = "Timer live activity"
+    static var description = IntentDescription("Pause and play timer")
+    
+    init(timerRunning: Bool) {
+        self.timerRunning = timerRunning
     }
     
-    init(activityId: String) {
-        self.activityId = activityId
-    }
-    
-    static var title: LocalizedStringResource = "Refresh Activity"
-    static var description = IntentDescription("Get the newest Energy Status")
+    init() {}
         
-    @Parameter
-    private var activityId: String?
+    @Parameter(title: "Is Timer Running")
+    var timerRunning: Bool
     
     func perform() async throws -> some IntentResult{
-//        print("refreshing \(String(describing: activityId))")
-//        if let activityId = activityId {
-//            await LiveActivityManager.endActivity(activityId)
-//        }
+        print("intent is called")
         return .result()
     }
 }

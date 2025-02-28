@@ -19,9 +19,12 @@
 + AV audio session is getting de-prioritized?
 - Noise stops after a while - might have been end of session, might not have been
 
-* UI: improvement for notifs NOTIF LIKE THE ALARM APP
+* UI: live activity for notifs 
+- On screen lock only shows first digit
 
 ### Wants:
+* Widget
+
 * Send notif alert for finished! when timer done
 * Add possibility for vibration alert? or screen alert/but this can also be notification?
 

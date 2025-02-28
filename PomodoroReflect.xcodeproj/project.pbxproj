@@ -96,6 +96,9 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				PomoWidgetAttributes.swift,
+				Themes.swift,
+				TimerActivityAttributes.swift,
+				utils.swift,
 			);
 			target = 4B9265022D6695DB0034A270 /* PomoWidgetExtension */;
 		};
@@ -108,11 +111,20 @@
 			);
 			target = 4B2081CF2CBDCB11002012B7 /* PomodoroReflect */;
 		};
+		4BD664E22D70D92500E86A63 /* Exceptions for "PomodoroReflect" folder in "PomoWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets/logo.png,
+			);
+			target = 4B9265022D6695DB0034A270 /* PomoWidgetExtension */;
+		};
 		4BE162A02D67B57F0030716B /* Exceptions for "SharedModelsLibrary" folder in "PomodoroReflect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				PomoWidgetAttributes.swift,
+				Themes.swift,
 				TimerActivityAttributes.swift,
+				utils.swift,
 			);
 			target = 4B2081CF2CBDCB11002012B7 /* PomodoroReflect */;
 		};
@@ -123,6 +135,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				4B2082072CBE23FC002012B7 /* Exceptions for "PomodoroReflect" folder in "PomodoroReflect" target */,
+				4BD664E22D70D92500E86A63 /* Exceptions for "PomodoroReflect" folder in "PomoWidgetExtension" target */,
 			);
 			path = PomodoroReflect;
 			sourceTree = "<group>";
@@ -135,11 +148,6 @@
 		4B2081EF2CBDCB12002012B7 /* PomodoroReflectUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PomodoroReflectUITests;
-			sourceTree = "<group>";
-		};
-		4B9264F72D6661E40034A270 /* PomodoroWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PomodoroWidget;
 			sourceTree = "<group>";
 		};
 		4B9265062D6695DB0034A270 /* PomoWidget */ = {
@@ -207,7 +215,6 @@
 		4B2081C72CBDCB11002012B7 = {
 			isa = PBXGroup;
 			children = (
-				4B9264F72D6661E40034A270 /* PomodoroWidget */,
 				4B2081D22CBDCB11002012B7 /* PomodoroReflect */,
 				4B2081E52CBDCB12002012B7 /* PomodoroReflectTests */,
 				4B2081EF2CBDCB12002012B7 /* PomodoroReflectUITests */,
@@ -259,7 +266,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				4B2081D22CBDCB11002012B7 /* PomodoroReflect */,
-				4B9264F72D6661E40034A270 /* PomodoroWidget */,
 			);
 			name = PomodoroReflect;
 			packageProductDependencies = (

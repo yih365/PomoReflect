@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-extension Color {
-    static let longBlue = Color(red: 0.4, green: 0.6, blue: 0.96)
-    static let customBlue = Color(red: 0.5, green: 0.6, blue: 0.96)
-    static let dullRed = Color(red: 0.95, green: 0.5, blue: 0.45)
-}
 
 struct TimerView: View {
     @State private var showSettings = false
@@ -40,7 +35,6 @@ struct TimerView: View {
            ("Short Break", 5 * 60),
            ("Long Break", 10 * 60)
     ]
-    @State private var colors:[Color] = [.dullRed, .customBlue, .longBlue]
     
     // Screen spread animation
 //    @State private var backgroundClr = Color.dullRed
@@ -56,7 +50,7 @@ struct TimerView: View {
             
             VStack {
                 // Use the TopBar view here
-                TopBar(timerRunning:$isTimerRunning,timerColor: colors[selectedTab],logoName: "leaf.fill", onSettingsTapped: {
+                TopBar(timerRunning:$isTimerRunning,timerColor: Themes.shared.colors[selectedTab],logoName: "leaf.fill", onSettingsTapped: {
                     showSettings = true
                 })
                 .sheet(isPresented: $showSettings) {
@@ -138,7 +132,7 @@ struct TimerView: View {
                                         .font(.title2)
                                     Text(isTimerRunning ? "Stop Timer" : "Start Timer")
                                 }
-                                .foregroundColor(colors[selectedTab])
+                                .foregroundColor(Themes.shared.colors[selectedTab])
                                 .padding()
                                 .frame(maxWidth: .infinity)
                                 .background(.white)
@@ -146,7 +140,7 @@ struct TimerView: View {
                             }
                         }
                         .padding()
-                        .background(colors[selectedTab])
+                        .background(Themes.shared.colors[selectedTab])
                         .cornerRadius(15)
                         .frame(width: totalTabWidth + CGFloat(tabs.count - 1) * tabSpacing)
                         
@@ -202,7 +196,7 @@ struct TimerView: View {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
             if remainingTimeInSecs > 0 {
                 remainingTimeInSecs -= 1
-                CountdownLiveActivity.shared.updateLiveActivity(remainingTime: TimeInterval(remainingTimeInSecs))
+//                CountdownLiveActivity.shared.updateLiveActivity(remainingTime: TimeInterval(remainingTimeInSecs))
 //                scheduleCountdownNotifications(timerDuration: remainingTimeInSecs)
             } else {
                 // Timer has finished
@@ -226,6 +220,7 @@ struct TimerView: View {
     func stopTimer() {
         isTimerRunning = false
         AudioManager.shared.stopBgAudio()
+        CountdownLiveActivity.shared.pauseLiveActivity(remainingTime:TimeInterval(remainingTimeInSecs))
         timer?.invalidate()
         timer = nil
     }
@@ -248,7 +243,7 @@ struct TimerView: View {
     
     func backgroundColor(for tab: Int) -> Color {
         if isTimerRunning {
-            return colors[selectedTab]
+            return Themes.shared.colors[selectedTab]
         } else {
             return .white
         }
@@ -257,14 +252,14 @@ struct TimerView: View {
     func getTabForegroundColor(for tab: Int) -> Color {
         if (isTimerRunning) {
             // Only selected tab should be visible
-            return colors[selectedTab]
+            return Themes.shared.colors[selectedTab]
         }
         
         // Timer not running
         if (selectedTab == tab) {
             return .white
         }
-        return colors[selectedTab]
+        return Themes.shared.colors[selectedTab]
     }
     
     func getTabBackgroundColor(for tab: Int) -> Color {
@@ -275,7 +270,7 @@ struct TimerView: View {
         
         // Timer not running
         if (selectedTab == tab) {
-            return colors[tab]
+            return Themes.shared.colors[tab]
         }
         return .white
     }

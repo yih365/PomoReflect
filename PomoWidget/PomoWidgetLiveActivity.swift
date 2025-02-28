@@ -5,50 +5,74 @@
 //  Created by Yiyi Huang on 2/19/25.
 //
 
-import ActivityKit
 import WidgetKit
 import SwiftUI
+import ActivityKit
+import AppIntents
 
 struct PomoWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: PomoWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+        ActivityConfiguration(for: TimerActivityAttributes.self) { context in
+            HStack {
+                Image(systemName:"app.fill") // Make sure this image is in Assets.xcassets
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 30, height: 30)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                VStack {
+                    Text(context.attributes.timerType)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if (context.state.timerRunning) {
+                        Text(timerInterval: Date.now...context.state.endTime, countsDown: true)
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        Text("\(getMins(from: context.state.remainingTime)):\(getSecs(from: context.state.remainingTime))")
+                            .font(.title)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                Spacer()
+                
+                // Play/Pause Button
+                Button(intent: PomoLiveIntent(timerRunning: context.state.timerRunning)) {
+                    Image(systemName: context.state.timerRunning ? "pause.fill" : "play.fill")
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                }
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
-
+            .padding()
+            .activityBackgroundTint(Themes.shared.colorsDict[context.attributes.timerType])
         } dynamicIsland: { context in
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    Text(context.attributes.timerType)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+//                    Text("\(getMin(from:context.state.remainingTime)):\(getSecs(from:context.state.remainingTime))")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    Text("Tap to open app")
+                        .font(.caption)
                 }
             } compactLeading: {
-                Text("L")
+                Image(systemName: "timer")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
             } minimal: {
-                Text(context.state.emoji)
+//                Text("\(getMin(from:context.state.remainingTime)):\(getSecs(from:context.state.remainingTime))")
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
 }
 
-#Preview("Notification", as: .content, using: PomoWidgetAttributes.preview) {
-   PomoWidgetLiveActivity()
+#Preview("Notification", as: .content, using: TimerActivityAttributes.preview) {
+    PomoWidgetLiveActivity()
 } contentStates: {
-    PomoWidgetAttributes.ContentState.smiley
-    PomoWidgetAttributes.ContentState.starEyes
+    TimerActivityAttributes.ContentState.zero
 }
