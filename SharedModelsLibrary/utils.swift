@@ -7,10 +7,14 @@
 
 import Foundation
 
-func getSecs(from timeInterval: TimeInterval) -> Int {
-    return NSInteger(timeInterval) % 60
+func getTimeString(from timeInterval: TimeInterval) -> String {
+    return "\(getMinsString(from: timeInterval)):\(getSecsString(from: timeInterval))"
 }
 
-func getMins(from timeInterval: TimeInterval) -> Int {
-    return (NSInteger(timeInterval)/60) % 60
+func getSecsString(from timeInterval: TimeInterval) -> String {
+    return String(format: "%02d", NSInteger(timeInterval) % 60)
+}
+
+func getMinsString(from timeInterval: TimeInterval) -> String {
+    return String(format: "%02d", (NSInteger(timeInterval)/60) % 60)
 }

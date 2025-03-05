@@ -17,12 +17,13 @@ struct PomoLiveIntent: LiveActivityIntent {
     }
     
     init() {}
-        
+
     @Parameter(title: "Is Timer Running")
     var timerRunning: Bool
     
     func perform() async throws -> some IntentResult{
         print("intent is called")
+        TimerFunctionality.shared.toggleTimer()
         return .result()
     }
 }

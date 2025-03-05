@@ -9,32 +9,11 @@ import SwiftUI
 
 
 struct TimerView: View {
-    @State private var showSettings = false
+    @State private var timer: TimerFunctionality = TimerFunctionality.shared
     
-    @State private var selectedTab: Int = 0
+    @State private var showSettings = false
     @State private var tabsCollected: Int = 0
     @State private var totalTabWidth: CGFloat = 0
-    
-    // State save for auto switch to long break
-    @State private var avgFocusForLongBreak: Double = 4
-    @State private var numCompleteFocusSessions: Int = 0
-    
-    // Timer variables
-    @State private var timer: Timer? = nil
-    @State private var remainingTimeInSecs: Int = 25*60
-    @State private var isTimerRunning = false
-    
-    // Settings
-    // Auto start breaks and timer
-    @State private var autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
-    @State private var selectedBackgroundNoise = TimerSettingsView.backgroundNoiseOptions[0]
-
-    // List of pairs (timer name, duration in seconds)
-    @State private var tabs = [
-        ("Focus", 25 * 60),
-           ("Short Break", 5 * 60),
-           ("Long Break", 10 * 60)
-    ]
     
     // Screen spread animation
 //    @State private var backgroundClr = Color.dullRed
@@ -45,21 +24,21 @@ struct TimerView: View {
     var body: some View {
         ZStack {
             // Dynamic background color based on timer state and selected tab
-            backgroundColor(for: selectedTab)
+            backgroundColor(for: timer.selectedTab)
                 .edgesIgnoringSafeArea(.all) // Ensures the background fills the entire screen
             
             VStack {
                 // Use the TopBar view here
-                TopBar(timerRunning:$isTimerRunning,timerColor: Themes.shared.colors[selectedTab],logoName: "leaf.fill", onSettingsTapped: {
+                TopBar(timerRunning:$timer.isTimerRunning,timerColor: Themes.shared.colors[timer.selectedTab],logoName: "leaf.fill", onSettingsTapped: {
                     showSettings = true
                 })
                 .sheet(isPresented: $showSettings) {
-                    TimerSettingsView(tabs: $tabs, autoStartBreaks: $autoStartBreaks, selectedBackgroundNoise: $selectedBackgroundNoise, onSave: {
+                    TimerSettingsView(tabs: $timer.tabs, autoStartBreaks: $timer.autoStartBreaks, selectedBackgroundNoise: $timer.selectedBackgroundNoise, onSave: {
                         (changedTimers: Bool) in
-                        playBgAudio()
+                        timer.playBgAudio()
                         if (changedTimers) {
                             stopTimer()
-                            remainingTimeInSecs = tabs[selectedTab].1
+                            timer.remainingTimeInSecs = timer.tabs[timer.selectedTab].1
                         }
                     })
                 }
@@ -69,13 +48,13 @@ struct TimerView: View {
                 GeometryReader { geometry in
                     // Tab buttons
                     HStack(spacing: tabSpacing) {
-                        ForEach(0..<tabs.count, id: \.self) { index in
-                            if (!isTimerRunning || (isTimerRunning && selectedTab == index)) {
+                        ForEach(0..<timer.tabs.count, id: \.self) { index in
+                            if (!timer.isTimerRunning || (timer.isTimerRunning && timer.selectedTab == index)) {
                                 Button(action: {
-                                    selectedTab = index
+                                    timer.selectedTab = index
                                     resetTimer()
                                 }) {
-                                    Text(tabs[index].0)
+                                    Text(timer.tabs[index].0)
                                         .padding()
                                         .foregroundColor(getTabForegroundColor(for: index))
                                         .background(getTabBackgroundColor(for:index))
@@ -113,7 +92,7 @@ struct TimerView: View {
                         
                         VStack(spacing: 20) {
                             // Time text
-                            Text(timeString(from: remainingTimeInSecs))
+                            Text(timeString(from: timer.remainingTimeInSecs))
                                 .foregroundColor(.white)
                                 .padding()
                                 .font(.system(size: 65, weight: .bold))
@@ -121,18 +100,18 @@ struct TimerView: View {
                             Button(action: {
                                 //                        print("Button tapped in Tab \(selectedTab + 1)")
 //                                spreadAnimation.toggle()
-                                if isTimerRunning {
+                                if timer.isTimerRunning {
                                     stopTimer()
                                 } else {
-                                    startTimer()
+                                    timer.startTimer()
                                 }
                             }) {
                                 HStack {
-                                    Image(systemName: isTimerRunning ? "pause.fill" : "play.fill")
+                                    Image(systemName: timer.isTimerRunning ? "pause.fill" : "play.fill")
                                         .font(.title2)
-                                    Text(isTimerRunning ? "Stop Timer" : "Start Timer")
+                                    Text(timer.isTimerRunning ? "Stop Timer" : "Start Timer")
                                 }
-                                .foregroundColor(Themes.shared.colors[selectedTab])
+                                .foregroundColor(Themes.shared.colors[timer.selectedTab])
                                 .padding()
                                 .frame(maxWidth: .infinity)
                                 .background(.white)
@@ -140,9 +119,9 @@ struct TimerView: View {
                             }
                         }
                         .padding()
-                        .background(Themes.shared.colors[selectedTab])
+                        .background(Themes.shared.colors[timer.selectedTab])
                         .cornerRadius(15)
-                        .frame(width: totalTabWidth + CGFloat(tabs.count - 1) * tabSpacing)
+                        .frame(width: totalTabWidth + CGFloat(timer.tabs.count - 1) * tabSpacing)
                         
                         Spacer()
                         Spacer()
@@ -156,83 +135,15 @@ struct TimerView: View {
     }
     
     private func loadDefaultSettings() {
-            let focusTime = UserDefaults.standard.integer(forKey: "Focus")
-            let shortBreakTime = UserDefaults.standard.integer(forKey: "Short Break")
-            let longBreakTime = UserDefaults.standard.integer(forKey: "Long Break")
-            
-        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
-//        tabs[0].1 = 5
-        tabs[1].1 = shortBreakTime > 0 ? shortBreakTime : tabs[1].1
-//        tabs[1].1 = 5
-        tabs[2].1 = longBreakTime > 0 ? longBreakTime : tabs[2].1
-            
-        remainingTimeInSecs = tabs[0].1 // Default to focus time on load
-        
-        autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
-        selectedBackgroundNoise = UserDefaults.standard.string(forKey: "BGNoise") ?? TimerSettingsView.backgroundNoiseOptions[0]
-    }
-    
-    func switchTab() {
-        if selectedTab == 0 { // If currently in Focus mode
-            if numCompleteFocusSessions % Int(floor(avgFocusForLongBreak)) == 0 {
-                selectedTab = 2
-            } else {
-                selectedTab = 1 // Switch to Short Break
-            }
-        } else if selectedTab == 1 { // If in Short Break
-            selectedTab = 0 // Switch back to Focus mode
-        }
-        resetTimerDur()
-        
-        if (autoStartBreaks) {
-            startTimer()
-        }
-    }
-    
-    func startTimer() {
-        isTimerRunning = true
-        playBgAudio()
-        CountdownLiveActivity.shared.startLiveActivity(duration: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            if remainingTimeInSecs > 0 {
-                remainingTimeInSecs -= 1
-//                CountdownLiveActivity.shared.updateLiveActivity(remainingTime: TimeInterval(remainingTimeInSecs))
-//                scheduleCountdownNotifications(timerDuration: remainingTimeInSecs)
-            } else {
-                // Timer has finished
-                AudioManager.shared.playTimerEnd()
-//                scheduleTimerEndNotifications()
-                CountdownLiveActivity.shared.stopLiveActivity()
-                if (selectedTab == 0) {
-                    // Finished in Focus Mode
-                    numCompleteFocusSessions += 1
-                }
-                stopTimer()
-                switchTab()
-            }
-        }
-    }
-    
-    func playBgAudio() {
-        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise, isFocusTimer: selectedTab == 0)
     }
     
     func stopTimer() {
-        isTimerRunning = false
-        AudioManager.shared.stopBgAudio()
-        CountdownLiveActivity.shared.pauseLiveActivity(remainingTime:TimeInterval(remainingTimeInSecs))
-        timer?.invalidate()
-        timer = nil
+        timer.stopTimer()
     }
     
     func resetTimer() {
-        resetTimerDur()
+        timer.resetTimerDur()
         stopTimer()
-    }
-    
-    func resetTimerDur() {
-        isTimerRunning = false
-        remainingTimeInSecs = tabs[selectedTab].1
     }
     
     func timeString(from seconds: Int) -> String {
@@ -242,34 +153,34 @@ struct TimerView: View {
     }
     
     func backgroundColor(for tab: Int) -> Color {
-        if isTimerRunning {
-            return Themes.shared.colors[selectedTab]
+        if timer.isTimerRunning {
+            return Themes.shared.colors[timer.selectedTab]
         } else {
             return .white
         }
     }
     
     func getTabForegroundColor(for tab: Int) -> Color {
-        if (isTimerRunning) {
+        if (timer.isTimerRunning) {
             // Only selected tab should be visible
-            return Themes.shared.colors[selectedTab]
+            return Themes.shared.colors[timer.selectedTab]
         }
         
         // Timer not running
-        if (selectedTab == tab) {
+        if (timer.selectedTab == tab) {
             return .white
         }
-        return Themes.shared.colors[selectedTab]
+        return Themes.shared.colors[timer.selectedTab]
     }
     
     func getTabBackgroundColor(for tab: Int) -> Color {
-        if (isTimerRunning) {
+        if (timer.isTimerRunning) {
             // Only selected tab should be visible
             return .white
         }
         
         // Timer not running
-        if (selectedTab == tab) {
+        if (timer.selectedTab == tab) {
             return Themes.shared.colors[tab]
         }
         return .white

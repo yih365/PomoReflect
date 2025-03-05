@@ -18,7 +18,6 @@ struct TimerSettingsView: View {
     @Environment(\.dismiss) var dismiss
     var onSave: ((Bool) -> Void)? // Closure to handle save action
     
-    static var backgroundNoiseOptions = ["None", "White Noise"]
     
     init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: ((Bool) -> Void)? = nil) {
         self._tabs = tabs
@@ -59,7 +58,7 @@ struct TimerSettingsView: View {
                                 .padding()
                 
                 Picker("Background Noise", selection: $selectedBackgroundNoise) {
-                    ForEach(TimerSettingsView.backgroundNoiseOptions, id: \.self) { noise in
+                    ForEach(AudioManager.backgroundNoiseOptions, id: \.self) { noise in
                         Text(noise).tag(noise)
                     }
                 }

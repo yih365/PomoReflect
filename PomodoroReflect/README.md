@@ -2,25 +2,23 @@
 * Three timers for (Focus, Short and Long Breaks), which run even when user is not in app
 * Settings for changing timer durations
 * Keeps timer running when timer duration isnt changed but other settings are changed
-* Shows timer countdown in notifications when app is running in background
 * Change timer countdown to finished! when timer done
 * Timer rings when pomodoro or break ends
 * Timer changes to break after pomo (and vice versa)
 * Toggle auto starting breaks and focus timer
 * UI: play icon on start button and pause on stop
 * UI: Tabs leave only selected tab on timer running
-
-### In progress:
-<!--* UI: Animate box to fill screen-->
-
+* Live activity for countdown, allowing users to pause and play through notifications center, live activity ends when timer is complete
 * Option for white noise
+
+### Bugs
 - The loop is weird, there exists noise that you can tell is end of the audio file
 - Noise stopped when turned phone off and app is in background, then came back when played spotify
 + AV audio session is getting de-prioritized?
 - Noise stops after a while - might have been end of session, might not have been
 
-* UI: live activity for notifs 
-- On screen lock only shows first digit
+### In progress:
+* UI: App logo placeholder
 
 ### Wants:
 * Widget

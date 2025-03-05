@@ -12,6 +12,8 @@ class AudioManager {
     var bgAudioPlayer: AVAudioPlayer?
     var timerEndAudioPlayer: AVAudioPlayer?
     
+    static var backgroundNoiseOptions = ["None", "White Noise"]
+
     func playBgAudio(selectedAudio: String, isFocusTimer: Bool) {
         stopBgAudio()
         
@@ -22,14 +24,14 @@ class AudioManager {
         }
         
         switch (selectedAudio) {
-            case TimerSettingsView.backgroundNoiseOptions[0]:
+        case AudioManager.backgroundNoiseOptions[0]:
                 playSilentAudio()
                 break
-            case TimerSettingsView.backgroundNoiseOptions[1]:
+        case AudioManager.backgroundNoiseOptions[1]:
                 playWhiteNoiseAudio()
                 break
-            default:
-                print("Error in selected audio.")
+        default:
+            print("Error in selected audio.")
         }
     }
     

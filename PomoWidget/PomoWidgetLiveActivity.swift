@@ -14,7 +14,7 @@ struct PomoWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: TimerActivityAttributes.self) { context in
             HStack {
-                Image(systemName:"app.fill") // Make sure this image is in Assets.xcassets
+                Image(systemName:"AppIcon") // Make sure this image is in Assets.xcassets
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)
@@ -30,7 +30,7 @@ struct PomoWidgetLiveActivity: Widget {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
-                        Text("\(getMins(from: context.state.remainingTime)):\(getSecs(from: context.state.remainingTime))")
+                        Text("\(getTimeString(from: context.state.remainingTime))")
                             .font(.title)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -43,7 +43,7 @@ struct PomoWidgetLiveActivity: Widget {
                     Image(systemName: context.state.timerRunning ? "pause.fill" : "play.fill")
                         .foregroundColor(.white)
                         .padding()
-                        .background(Color.blue)
+                        .background(Themes.shared.colorsDict[context.attributes.timerType])
                         .clipShape(Circle())
                 }
             }
@@ -55,7 +55,6 @@ struct PomoWidgetLiveActivity: Widget {
                     Text(context.attributes.timerType)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-//                    Text("\(getMin(from:context.state.remainingTime)):\(getSecs(from:context.state.remainingTime))")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     Text("Tap to open app")
@@ -65,7 +64,6 @@ struct PomoWidgetLiveActivity: Widget {
                 Image(systemName: "timer")
             } compactTrailing: {
             } minimal: {
-//                Text("\(getMin(from:context.state.remainingTime)):\(getSecs(from:context.state.remainingTime))")
             }
         }
     }

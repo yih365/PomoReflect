@@ -95,6 +95,8 @@
 		4B9265542D66A1960034A270 /* Exceptions for "SharedModelsLibrary" folder in "PomoWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AudioManager.swift,
+				CountdownLiveActivity.swift,
 				PomoWidgetAttributes.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
@@ -115,12 +117,15 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets/logo.png,
+				Models/TimerFunctionality.swift,
 			);
 			target = 4B9265022D6695DB0034A270 /* PomoWidgetExtension */;
 		};
 		4BE162A02D67B57F0030716B /* Exceptions for "SharedModelsLibrary" folder in "PomodoroReflect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AudioManager.swift,
+				CountdownLiveActivity.swift,
 				PomoWidgetAttributes.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
