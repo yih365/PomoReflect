@@ -7,11 +7,15 @@
 
 import Observation
 import Foundation
+import SwiftUI
 
 @Observable
 class TimerFunctionality {
     static var shared = TimerFunctionality()
     
+    // Don't need state here because session is only ever written, not read
+    private var sessionManager = SessionManager.shared
+
     // List of pairs (timer name, duration in seconds)
     var tabs = [
         ("Focus", 25 * 60),
@@ -72,6 +76,10 @@ class TimerFunctionality {
 
     func startTimer() {
         isTimerRunning = true
+        if (selectedTab == 0) {
+            // Increment session ID only for focus session
+            sessionManager.startNewSession()
+        }
         playBgAudio()
         CountdownLiveActivity.shared.startLiveActivity(duration: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
         DispatchQueue.main.async {
@@ -81,7 +89,7 @@ class TimerFunctionality {
                 } else {
                     // Timer has finished
                     AudioManager.shared.playTimerEnd()
-                    //                scheduleTimerEndNotifications()
+                    Notifs.scheduleTimerEndNotifications()
                     CountdownLiveActivity.shared.stopLiveActivity()
                     if (self.selectedTab == 0) {
                         // Finished in Focus Mode

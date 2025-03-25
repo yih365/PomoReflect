@@ -11,6 +11,7 @@ extension Color {
     static let longBlue = Color(red: 0.4, green: 0.6, blue: 0.96)
     static let customBlue = Color(red: 0.5, green: 0.6, blue: 0.96)
     static let dullRed = Color(red: 0.95, green: 0.5, blue: 0.45)
+    static let pagePigment = Color(red: 1, green: 0.99, blue: 0.98)
 }
 
 struct Themes {

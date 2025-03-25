@@ -12,7 +12,11 @@ class AudioManager {
     var bgAudioPlayer: AVAudioPlayer?
     var timerEndAudioPlayer: AVAudioPlayer?
     
-    static var backgroundNoiseOptions = ["None", "White Noise"]
+    static var backgroundNoiseOptions = [
+        "None",
+        "Clock Tick",
+        //        "White Noise",
+    ]
 
     func playBgAudio(selectedAudio: String, isFocusTimer: Bool) {
         stopBgAudio()
@@ -28,7 +32,8 @@ class AudioManager {
                 playSilentAudio()
                 break
         case AudioManager.backgroundNoiseOptions[1]:
-                playWhiteNoiseAudio()
+                playTickAudio()
+//                playWhiteNoiseAudio()
                 break
         default:
             print("Error in selected audio.")
@@ -55,9 +60,16 @@ class AudioManager {
         playBgAudio(url: silenceURL)
     }
     
+    // CURRENTLY: NOT IN SERVICE
+    // White noise creates a noticeable sound when cut/ended
     func playWhiteNoiseAudio() {
         let whiteNoiseURL = Bundle.main.url(forResource: "underwater-white-noise", withExtension: "mp3")!
         playBgAudio(url: whiteNoiseURL)
+    }
+    
+    func playTickAudio() {
+        let tickNoiseURL = Bundle.main.url(forResource: "two-tick", withExtension: "mp3")!
+        playBgAudio(url: tickNoiseURL)
     }
 
     func stopBgAudio() {

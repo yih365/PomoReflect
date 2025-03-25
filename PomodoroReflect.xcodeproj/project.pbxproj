@@ -80,6 +80,9 @@
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		4B2082072CBE23FC002012B7 /* Exceptions for "PomodoroReflect" folder in "PomodoroReflect" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			assetTagsByRelativePath = {
+				"Assets/box-diagram.jpg" = ("box-diagram", );
+			};
 			membershipExceptions = (
 				Info.plist,
 			);
@@ -97,9 +100,12 @@
 			membershipExceptions = (
 				AudioManager.swift,
 				CountdownLiveActivity.swift,
+				Notifs.swift,
 				PomoWidgetAttributes.swift,
+				SessionManager.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
+				types.swift,
 				utils.swift,
 			);
 			target = 4B9265022D6695DB0034A270 /* PomoWidgetExtension */;
@@ -126,9 +132,12 @@
 			membershipExceptions = (
 				AudioManager.swift,
 				CountdownLiveActivity.swift,
+				Notifs.swift,
 				PomoWidgetAttributes.swift,
+				SessionManager.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
+				types.swift,
 				utils.swift,
 			);
 			target = 4B2081CF2CBDCB11002012B7 /* PomodoroReflect */;
@@ -376,6 +385,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					"box-diagram",
+				);
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {

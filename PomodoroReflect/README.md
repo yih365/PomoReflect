@@ -9,35 +9,39 @@
 * UI: play icon on start button and pause on stop
 * UI: Tabs leave only selected tab on timer running
 * Live activity for countdown, allowing users to pause and play through notifications center, live activity ends when timer is complete
-* Option for white noise
+* Send notif alert for finished! when timer done
+* Option for clock tick noise for focus bg noise
+* Page: Allows user to write in current task and take note of other thoughts during the session, and delete notes when finished
+* Page: Allow users to enter focus level for session and graph of data points
+* Page: Break exercises (box breathing, doodling)
 
 ### Bugs
-- The loop is weird, there exists noise that you can tell is end of the audio file
-- Noise stopped when turned phone off and app is in background, then came back when played spotify
-+ AV audio session is getting de-prioritized?
-- Noise stops after a while - might have been end of session, might not have been
 
 ### In progress:
-* UI: App logo placeholder
+* Make half page higher and timer smaller in this view mode
+
+* Make live activity extension same color as current timer
+
 
 ### Wants:
 * Widget
 
-* Send notif alert for finished! when timer done
-* Add possibility for vibration alert? or screen alert/but this can also be notification?
-
 * Volume control for bg audio and timer
-- Timer louder or longer?
-* Diff sounds for focus end and break end
-
-### Additional wants:
-* Shows statistics (ex. current session (since app on) time in focus, and time in break)
-
-* Option for deep study music / instrumental
-- Possibly not just because this involves importing a large audio file
+- Timer louder (compared to background noise sounds) or longer?
 
 * Connect to spotify API or yt API for selection? (CAN BE SMTH REALLY SPECIAL HERE)
+
+* built-in white noise: The loop is weird, there exists noise that you can tell is end of the audio file (If really want and not worries about storage, use 60 min white noise audio)
+
+### Additional wants:
+* Words of encouragement for focus levels trend
+
+* Add possibility for vibration alert
+
+* Built-in noise: Option for deep study music / instrumental (max 30 mins then loop maybe)
 
 * Calendar: google calendar integration
 
 * task list integration (note: are there schemas for these, are there ways that make inter app experiences easier, seems like task list should be pretty easy?)
+
+* Diff sounds for focus end and break end

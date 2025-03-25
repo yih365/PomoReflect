@@ -9,22 +9,21 @@ import SwiftUI
 
 
 struct TimerView: View {
-    @State private var timer: TimerFunctionality = TimerFunctionality.shared
+    @Binding var viewMode: ViewMode
     
+    @State private var timer: TimerFunctionality = TimerFunctionality.shared
+    @StateObject private var timerViewStates = TimerViewStates.shared
+
     @State private var showSettings = false
-    @State private var tabsCollected: Int = 0
-    @State private var totalTabWidth: CGFloat = 0
     
     // Screen spread animation
 //    @State private var backgroundClr = Color.dullRed
 //    @State private var spreadAnimation = false
 
-    @State private var tabSpacing: CGFloat = 10
-    
     var body: some View {
         ZStack {
             // Dynamic background color based on timer state and selected tab
-            backgroundColor(for: timer.selectedTab)
+            TimerView.backgroundColor()
                 .edgesIgnoringSafeArea(.all) // Ensures the background fills the entire screen
             
             VStack {
@@ -47,7 +46,7 @@ struct TimerView: View {
                 
                 GeometryReader { geometry in
                     // Tab buttons
-                    HStack(spacing: tabSpacing) {
+                    HStack(spacing: timerViewStates.tabSpacing) {
                         ForEach(0..<timer.tabs.count, id: \.self) { index in
                             if (!timer.isTimerRunning || (timer.isTimerRunning && timer.selectedTab == index)) {
                                 Button(action: {
@@ -64,10 +63,7 @@ struct TimerView: View {
                                     Color.clear
                                         .onAppear {
                                             // Capture the total width of all tabs on start
-                                            if (tabsCollected < 3) {
-                                                tabsCollected += 1
-                                                totalTabWidth += tabGeometry.size.width
-                                            }
+                                            timerViewStates.updateTabWidths(tabWidth: tabGeometry.size.width)
                                         }
                                 })
                             }
@@ -121,7 +117,7 @@ struct TimerView: View {
                         .padding()
                         .background(Themes.shared.colors[timer.selectedTab])
                         .cornerRadius(15)
-                        .frame(width: totalTabWidth + CGFloat(timer.tabs.count - 1) * tabSpacing)
+                        .frame(width: timerViewStates.totalTabWidth + CGFloat(timer.tabs.count - 1) * timerViewStates.tabSpacing)
                         
                         Spacer()
                         Spacer()
@@ -132,6 +128,7 @@ struct TimerView: View {
         .onAppear(
             perform: loadDefaultSettings
         )
+        .frame(width: UIScreen.main.bounds.width)
     }
     
     private func loadDefaultSettings() {
@@ -152,9 +149,9 @@ struct TimerView: View {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    func backgroundColor(for tab: Int) -> Color {
-        if timer.isTimerRunning {
-            return Themes.shared.colors[timer.selectedTab]
+    static func backgroundColor() -> Color {
+        if TimerFunctionality.shared.isTimerRunning {
+            return Themes.shared.colors[TimerFunctionality.shared.selectedTab]
         } else {
             return .white
         }
@@ -188,5 +185,6 @@ struct TimerView: View {
 }
 
 #Preview {
-    TimerView()
+    @Previewable @State var mode = ViewMode.HalfTimer
+    TimerView(viewMode: $mode)
 }
