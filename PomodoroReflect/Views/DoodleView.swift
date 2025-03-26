@@ -41,7 +41,7 @@ struct DoodleView: View {
                         currentLine = Line(points: [])
                     }
             )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(height: 700)
             .background(Color.gray.opacity(0.2))
             .cornerRadius(10)
             .padding()

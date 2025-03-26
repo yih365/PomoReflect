@@ -11,6 +11,7 @@
 * Live activity for countdown, allowing users to pause and play through notifications center, live activity ends when timer is complete
 * Send notif alert for finished! when timer done
 * Option for clock tick noise for focus bg noise
+* Page view feature: Hidden away page that contains focus tools, collapsibly to immerse user in the timer. Timer is always in view to be a reminder of the ticking time.
 * Page: Allows user to write in current task and take note of other thoughts during the session, and delete notes when finished
 * Page: Allow users to enter focus level for session and graph of data points
 * Page: Break exercises (box breathing, doodling)
@@ -18,13 +19,11 @@
 ### Bugs
 
 ### In progress:
-* Make half page higher and timer smaller in this view mode
-
 * Make live activity extension same color as current timer
 
 
 ### Wants:
-* Widget
+* Widget (click to start session)
 
 * Volume control for bg audio and timer
 - Timer louder (compared to background noise sounds) or longer?

@@ -17,4 +17,8 @@ class SessionManager : ObservableObject {
     func startNewSession() {
         sessionId += 1
     }
+    
+    func resetSession() {
+        sessionId = 0
+    }
 }

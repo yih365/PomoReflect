@@ -10,6 +10,9 @@ import SwiftUI
 
 struct BreakExercisesView: View {
     @State private var selectedExercise: ExerciseType = .breathing
+    
+    private var bgColorSelected = Color.customBlue
+    private var bgColorUnselected = Color.white
 
     enum ExerciseType {
         case breathing, doodling
@@ -25,8 +28,9 @@ struct BreakExercisesView: View {
                     Text("Breathing")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(selectedExercise == .breathing ? Color.gray.opacity(0.8) : Color.gray.opacity(0.5))
-                        .foregroundColor(.white)
+                        .background(selectedExercise == .breathing ? bgColorSelected : bgColorUnselected)
+                        .foregroundColor(getFgColor(for: .breathing))
+//                        .underline(selectedExercise != .breathing)
                         .cornerRadius(10)
                 }
 
@@ -36,8 +40,9 @@ struct BreakExercisesView: View {
                     Text("Doodling")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(selectedExercise == .doodling ? Color.gray.opacity(0.8) : Color.gray.opacity(0.5))
-                        .foregroundColor(.white)
+                        .background(selectedExercise == .doodling ? bgColorSelected : bgColorUnselected)
+                        .foregroundColor(getFgColor(for: .doodling))
+//                        .underline(selectedExercise != .doodling)
                         .cornerRadius(10)
                 }
             }
@@ -53,20 +58,27 @@ struct BreakExercisesView: View {
             Spacer()
         }
     }
+    
+    private func getFgColor(for exercise: ExerciseType) -> Color {
+        if (selectedExercise == exercise) {
+            return .white
+        }
+        return bgColorSelected
+    }
 }
 
 struct BreathingExerciseView: View {
     var body: some View {
-        Text("Breathing Exercise")
-            .font(.title)
+//        Text("Breathing Exercise")
+//            .font(.title)
         BoxBreathingView()
     }
 }
 
 struct DoodlingExerciseView: View {
     var body: some View {
-        Text("Doodling Exercise")
-            .font(.title)
+//        Text("Doodling Exercise")
+//            .font(.title)
         DoodleView()
     }
 }

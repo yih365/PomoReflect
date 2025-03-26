@@ -13,11 +13,14 @@ struct PomodoroReflectApp: App {
     @State private var mode = ViewMode.FullTimer
     @State private var timerViewHeightOffset: CGFloat = 0
     @State private var pageViewHeightOffset: CGFloat = 0
+    @State private var timerViewHeight: CGFloat = 0 // Store TimerView height
+    
+    @AppStorage("lastOpenedTab") private var selectedTab: Int = 0
+
     private var timerPageSplit = CGFloat(15)
     
     init() {
         Notifs.requestNotificationPermission()
-        UITabBar.appearance().backgroundColor = UIColor.systemGray6
     }
     
     var sharedModelContainer: ModelContainer = {
@@ -41,7 +44,7 @@ struct PomodoroReflectApp: App {
         case ViewMode.FullTimer:
             startViewHeight = maxHeight
         case ViewMode.HalfTimer:
-            startViewHeight = geometry.size.height/2
+            startViewHeight = 200
         case ViewMode.FullPage:
             startViewHeight = 0
         }
@@ -53,21 +56,23 @@ struct PomodoroReflectApp: App {
     }
     
     func getGoalViewHeight(geometry: GeometryProxy) -> CGFloat {
-        var viewHeight = CGFloat(0)
         let maxHeight = geometry.size.height
-        switch (mode) {
-        case ViewMode.FullTimer:
-            viewHeight = 0
-        case ViewMode.HalfTimer:
-            viewHeight = geometry.size.height/2
-        case ViewMode.FullPage:
-            viewHeight = maxHeight
-        }
         
-        viewHeight -= timerViewHeightOffset
-        viewHeight = max(viewHeight, 0)
-        viewHeight = min(viewHeight, maxHeight)
-        return viewHeight
+        return maxHeight - timerViewHeight
+        
+//        switch (mode) {
+//        case ViewMode.FullTimer:
+//            viewHeight = 0
+//        case ViewMode.HalfTimer:
+//            viewHeight = maxHeight - getTimerViewHeight(geometry: geometry)
+//        case ViewMode.FullPage:
+//            viewHeight = maxHeight
+//        }
+//        
+//        viewHeight -= timerViewHeightOffset
+//        viewHeight = max(viewHeight, 0)
+//        viewHeight = min(viewHeight, maxHeight)
+//        return viewHeight
     }
     
     func timerViewNotNone() -> Bool {
@@ -82,57 +87,67 @@ struct PomodoroReflectApp: App {
         WindowGroup {
             GeometryReader { geometry in
                 VStack {
+                    // Timer
                     if (mode != ViewMode.FullPage || timerViewNotNone()) {
-                        TimerView(viewMode: $mode).frame(width: geometry.size.width, height: getTimerViewHeight(geometry: geometry))
+                        TimerView(viewMode: $mode, onHeightChange: { height in
+                            timerViewHeight = height
+                        })
+                        .frame(width: geometry.size.width, height: getTimerViewHeight(geometry: geometry))
                     }
                     
-                    // Draggable Hint
+                    // View expander toggle
                     VStack{
-                            Capsule()
-                                .fill(Color.gray.opacity(0.6))
-                                .frame(width: 40, height: 5)
-                                .padding(.top, 10)
-                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .named("screen"))
-                                .onChanged { value in
-                                    timerViewHeightOffset = value.translation.height
-                                }
-                                .onEnded({ value in
-                                    let predictedEnd = value.predictedEndLocation.y + timerViewHeightOffset
-                                    let screenHeight = UIScreen.main.bounds.height
-                                    if (predictedEnd < screenHeight*1/4) {
-                                        mode = ViewMode.FullPage
-                                    } else if (predictedEnd < screenHeight*2/3) {
+                            Button(action: {
+                                    if (mode == ViewMode.FullTimer) {
                                         mode = ViewMode.HalfTimer
                                     } else {
                                         mode = ViewMode.FullTimer
                                     }
-                                    timerViewHeightOffset = 0
-                                }))
+                                }) {
+                                    HStack {
+                                        Image(systemName: mode == ViewMode.HalfTimer ? "chevron.down" : "chevron.up")
+                                            .foregroundColor(.black)
+                                    }
+                                    .frame(width: 200, height: 30)
+                                        .background(
+                                            Capsule()
+                                                .fill(Color.white)
+                                                .overlay(
+                                                    Capsule()
+                                                        .stroke(Color.black, lineWidth: 0.5)
+                                                )
+                                        )
+                                }
                         
+                        // Page view
                         if (mode != .FullTimer || pageViewNotNone()) {
-                            TabView{
+                            TabView(selection: $selectedTab) {
                                 ScrollView {
                                     GoalWritingView()
                                 }
                                 .tabItem {
-                                    Label("Goal", systemImage: "target") // 🎯 Icon for Goal Page
+                                    Label("Goal", systemImage: "target") // 🎯
                                 }
+                                .tag(0)
                                 
                                 ScrollView {
                                     FocusStatsView()
                                 }
                                 .tabItem {
-                                    Label("Focus Levels", systemImage: "chart.bar.fill") // 📊 Icon for Focus Levels Page
+                                    Label("Focus Levels", systemImage: "chart.bar.fill") // 📊
                                 }
-                                
+                                .tag(1)
+
                                 ScrollView {
                                     BreakExercisesView()
                                 }
                                 .tabItem {
                                     Label("Break Exercises", systemImage: "figure.mind.and.body") // 🧘
                                 }
+                                .tag(2)
                             }
                             .frame(height: getGoalViewHeight(geometry: geometry))
+                            .toolbarBackground(Color.pagePigment, for: .tabBar)
                         } else {
                             Rectangle()
                                 .fill(Color.pagePigment)

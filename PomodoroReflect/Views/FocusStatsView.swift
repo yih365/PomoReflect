@@ -15,7 +15,7 @@ struct FocusStatsView: View {
 
     var body: some View {
         VStack {
-            Text("How focused were you? (Session#\(sessionManager.sessionId))")
+            Text("How focused were you? (Focus#\(sessionManager.sessionId))")
                 .font(.headline)
                 .foregroundColor(.black)
 
@@ -31,14 +31,47 @@ struct FocusStatsView: View {
                 }
             }
             .padding()
+            .onChange(of: sessionManager.sessionId) { _ in
+                resetSelectedFocus()
+            }
             
             FocusLevelChart(graphLimit: graphLimit)
                 .padding()
             
-            Spacer()
-            Spacer()
+            Button(action: {
+                resetFocusLevels()
+            }) {
+                Text("Reset Focus Levels")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(10)
+            }
         }
         .padding()
+    }
+    
+    private func resetSelectedFocus() {
+        // Reset selectedFocus when the session ID changes
+        selectedFocus = 0
+    }
+    
+    private func resetFocusLevels() {
+        do {
+            let fetchRequest = FetchDescriptor<FocusLevel>()
+            let focusLevels = try modelContext.fetch(fetchRequest)
+
+            for focusLevel in focusLevels {
+                modelContext.delete(focusLevel)
+            }
+
+            try modelContext.save()
+            
+            // Also reset Focus session
+            sessionManager.resetSession()
+        } catch {
+            print("Error resetting focus levels: \(error)")
+        }
     }
     
     private func saveFocusLevel() {
