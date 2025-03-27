@@ -61,7 +61,12 @@ struct PomoWidgetLiveActivity: Widget {
                         .font(.caption)
                 }
             } compactLeading: {
-                Image(systemName: "timer")
+                HStack {
+                    Image(systemName: "timer")
+                        .padding()
+                }
+                .background(Themes.shared.colorsDict[context.attributes.timerType])
+                .cornerRadius(8)
             } compactTrailing: {
             } minimal: {
             }

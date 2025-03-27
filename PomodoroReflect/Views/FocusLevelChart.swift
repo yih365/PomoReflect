@@ -29,7 +29,7 @@ struct FocusLevelChart: View {
                     x: .value("Session", focus.sessionId),
                     y: .value("Focus Level", focus.level)
                 )
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.dullRed)
                 .symbol(.circle)
             }
             .chartYScale(domain: 1...5) // Focus level ranges from 1 to 5

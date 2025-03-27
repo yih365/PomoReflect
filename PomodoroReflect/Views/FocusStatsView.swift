@@ -7,6 +7,9 @@ struct FocusStatsView: View {
     @StateObject private var sessionManager = SessionManager.shared
 
     @State private var selectedFocus: Int = 0
+    @State private var showToast: Bool = false
+    
+    @State private var toastMsg = ""
     
     @Query private var focusLevels: [FocusLevel]
     
@@ -15,29 +18,47 @@ struct FocusStatsView: View {
 
     var body: some View {
         VStack {
-            Text("How focused were you? (Focus#\(sessionManager.sessionId))")
+            Text("How focused were you? (Focus #\(sessionManager.sessionId))")
                 .font(.headline)
                 .foregroundColor(.black)
 
             HStack {
                 ForEach(1...5, id: \.self) { level in
                     Circle()
-                        .fill(level <= selectedFocus ? Color.blue : Color.gray.opacity(0.3))
+                        .fill(level <= selectedFocus ? Color.dullRed : Color.gray.opacity(0.3))
                         .frame(width: 40, height: 40)
                         .onTapGesture {
+                            // Show toast
+                            if (isShowToastCondition(level: level)) {
+                                showToast = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    showToast = false
+                                }
+                            }
+
                             selectedFocus = level
                             saveFocusLevel()
                         }
                 }
             }
             .padding()
-            .onChange(of: sessionManager.sessionId) { _ in
+            .onChange(of: sessionManager.sessionId) {
                 resetSelectedFocus()
             }
             
             FocusLevelChart(graphLimit: graphLimit)
                 .padding()
-            
+                .overlay(
+                    VStack {
+                        Spacer() // Pushes toast to the bottom
+                        if showToast {
+                            ToastView(message: toastMsg)
+                                .transition(.opacity)
+                                .padding(.bottom, 40) // Adjust position
+                        }
+                    }
+                )
+
             Button(action: {
                 resetFocusLevels()
             }) {
@@ -49,6 +70,22 @@ struct FocusStatsView: View {
             }
         }
         .padding()
+    }
+    
+    /*
+     This method will also set toast message.
+     */
+    private func isShowToastCondition(level: Int) -> Bool {
+        let previousFocus = focusLevels.max(by: { $0.sessionId < $1.sessionId })?.level ?? 0
+
+        if level > previousFocus {
+            toastMsg = "Better focus! Good job!"
+        } else if level < previousFocus && level < 3 {
+            toastMsg = "Uh oh"
+        } else {
+            return false
+        }
+        return true
     }
     
     private func resetSelectedFocus() {
@@ -101,6 +138,19 @@ struct FocusStatsView: View {
                 modelContext.insert(newStat)
             }
         }
+    }
+}
+
+struct ToastView: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .padding()
+            .background(Color.black.opacity(0.8))
+            .foregroundColor(.white)
+            .clipShape(Capsule())
+            .padding(.horizontal, 20)
     }
 }
 

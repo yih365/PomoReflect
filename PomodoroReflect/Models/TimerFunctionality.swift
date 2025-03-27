@@ -44,8 +44,8 @@ class TimerFunctionality {
         let shortBreakTime = UserDefaults.standard.integer(forKey: "Short Break")
         let longBreakTime = UserDefaults.standard.integer(forKey: "Long Break")
         
-        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
-//            tabs[0].1 = 5
+//        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
+            tabs[0].1 = 5
         tabs[1].1 = shortBreakTime > 0 ? shortBreakTime : tabs[1].1
 //            tabs[1].1 = 5
         tabs[2].1 = longBreakTime > 0 ? longBreakTime : tabs[2].1

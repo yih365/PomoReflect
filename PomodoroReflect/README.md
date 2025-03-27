@@ -8,33 +8,28 @@
 * Toggle auto starting breaks and focus timer
 * UI: play icon on start button and pause on stop
 * UI: Tabs leave only selected tab on timer running
-* Live activity for countdown, allowing users to pause and play through notifications center, live activity ends when timer is complete
+* Live activity: for countdown, allowing users to pause and play through notifications center, live activity ends when timer is complete. Dynamic island shows color corresponding to current focus session.
 * Send notif alert for finished! when timer done
 * Option for clock tick noise for focus bg noise
 * Page view feature: Hidden away page that contains focus tools, collapsibly to immerse user in the timer. Timer is always in view to be a reminder of the ticking time.
 * Page: Allows user to write in current task and take note of other thoughts during the session, and delete notes when finished
 * Page: Allow users to enter focus level for session and graph of data points
 * Page: Break exercises (box breathing, doodling)
+* Widget to open app
 
 ### Bugs
 
 ### In progress:
-* Make live activity extension same color as current timer
-
 
 ### Wants:
-* Widget (click to start session)
-
 * Volume control for bg audio and timer
-- Timer louder (compared to background noise sounds) or longer?
+- Timer louder (compared to background noise sounds)
 
 * Connect to spotify API or yt API for selection? (CAN BE SMTH REALLY SPECIAL HERE)
 
 * built-in white noise: The loop is weird, there exists noise that you can tell is end of the audio file (If really want and not worries about storage, use 60 min white noise audio)
 
 ### Additional wants:
-* Words of encouragement for focus levels trend
-
 * Add possibility for vibration alert
 
 * Built-in noise: Option for deep study music / instrumental (max 30 mins then loop maybe)

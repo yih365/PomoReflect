@@ -135,6 +135,9 @@ struct TimerView: View {
                     
                     Spacer()
                     Spacer()
+                    if (viewMode == ViewMode.HalfTimer) {
+                        Spacer()
+                    }
                 }
                     }
         }

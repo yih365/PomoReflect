@@ -59,20 +59,6 @@ struct PomodoroReflectApp: App {
         let maxHeight = geometry.size.height
         
         return maxHeight - timerViewHeight
-        
-//        switch (mode) {
-//        case ViewMode.FullTimer:
-//            viewHeight = 0
-//        case ViewMode.HalfTimer:
-//            viewHeight = maxHeight - getTimerViewHeight(geometry: geometry)
-//        case ViewMode.FullPage:
-//            viewHeight = maxHeight
-//        }
-//        
-//        viewHeight -= timerViewHeightOffset
-//        viewHeight = max(viewHeight, 0)
-//        viewHeight = min(viewHeight, maxHeight)
-//        return viewHeight
     }
     
     func timerViewNotNone() -> Bool {
@@ -118,6 +104,7 @@ struct PomodoroReflectApp: App {
                                                 )
                                         )
                                 }
+                                .padding(.top, 10)
                         
                         // Page view
                         if (mode != .FullTimer || pageViewNotNone()) {
@@ -148,6 +135,7 @@ struct PomodoroReflectApp: App {
                             }
                             .frame(height: getGoalViewHeight(geometry: geometry))
                             .toolbarBackground(Color.pagePigment, for: .tabBar)
+                            .tint(Color(.darkGray))
                         } else {
                             Rectangle()
                                 .fill(Color.pagePigment)

@@ -10,9 +10,9 @@ import AppIntents
 
 struct ConfigurationAppIntent: WidgetConfigurationIntent {
     static var title: LocalizedStringResource { "Configuration" }
-    static var description: IntentDescription { "This is an example widget." }
+    static var description: IntentDescription { "This is the Pomo widget." }
 
     // An example configurable parameter.
-    @Parameter(title: "Favorite Emoji", default: "😃")
-    var favoriteEmoji: String
+    @Parameter(title: "Start Focus Time", default: "25:00")
+    var focusTime: String
 }

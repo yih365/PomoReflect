@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import WidgetKit
 
 struct TimerSettingsView: View {
     @Binding var tabs: [(String,Int)] // Binding to pass and update default timers
@@ -93,6 +94,9 @@ struct TimerSettingsView: View {
                 // Save to UserDefaults
                 UserDefaults.standard.set(autoStartBreaks, forKey: "autoStartBreaks")
                 UserDefaults.standard.set(selectedBackgroundNoise, forKey: "BGNoise")
+                
+                // Reload widget
+                WidgetCenter.shared.reloadAllTimelines()
                 
                 dismiss()
             })

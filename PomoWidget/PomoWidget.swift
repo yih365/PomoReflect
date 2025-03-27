@@ -1,57 +1,57 @@
-//
-//  PomoWidget.swift
-//  PomoWidget
-//
-//  Created by Yiyi Huang on 2/19/25.
-//
-
 import WidgetKit
 import SwiftUI
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent())
+        SimpleEntry(date: Date(), focusTime: "25:00")
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration)
+        SimpleEntry(date: Date(), focusTime: getFocusTime())
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
         var entries: [SimpleEntry] = []
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
         let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
+        
+        // Retrieve the focus time from UserDefaults
+        let focusTime = getFocusTime()
+
+        // Generate a timeline with entries containing the focus time
+        for hourOffset in 0..<5 {
             let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, configuration: configuration)
+            let entry = SimpleEntry(date: entryDate, focusTime: focusTime)
             entries.append(entry)
         }
 
         return Timeline(entries: entries, policy: .atEnd)
     }
 
-//    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-//        // Generate a list containing the contexts this widget is relevant in.
-//    }
+    // Helper function to retrieve the focus time from UserDefaults
+    private func getFocusTime() -> String {
+        return UserDefaults.standard.string(forKey: "Focus") ?? "25:00"
+    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let configuration: ConfigurationAppIntent
+    let focusTime: String
 }
 
-struct PomoWidgetEntryView : View {
+struct PomoWidgetEntryView: View {
     var entry: Provider.Entry
 
     var body: some View {
         VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+            Text("Start Focus Time")
+                .foregroundColor(.white)
+            Text(entry.focusTime)
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.white)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure full coverage
+        .background(Color.dullRed) // Set the entire background to dullRed
     }
 }
 
@@ -61,21 +61,14 @@ struct PomoWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             PomoWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
         }
     }
 }
 
 extension ConfigurationAppIntent {
-    fileprivate static var smiley: ConfigurationAppIntent {
+    fileprivate static var twentyFive: ConfigurationAppIntent {
         let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "😀"
-        return intent
-    }
-    
-    fileprivate static var starEyes: ConfigurationAppIntent {
-        let intent = ConfigurationAppIntent()
-        intent.favoriteEmoji = "🤩"
+        intent.focusTime = "25:00"
         return intent
     }
 }
@@ -83,6 +76,5 @@ extension ConfigurationAppIntent {
 #Preview(as: .systemSmall) {
     PomoWidget()
 } timeline: {
-    SimpleEntry(date: .now, configuration: .smiley)
-    SimpleEntry(date: .now, configuration: .starEyes)
+    SimpleEntry(date: .now, focusTime: "25:00")
 }
