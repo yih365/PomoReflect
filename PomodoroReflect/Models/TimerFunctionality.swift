@@ -13,6 +13,10 @@ import SwiftUI
 class TimerFunctionality {
     static var shared = TimerFunctionality()
     
+    let sharedDefaults = UserDefaults(suiteName: "group.com.yh.pomodorofocus") ?? UserDefaults.standard
+    
+    private var popupManager = PopupManager.shared
+    
     // Don't need state here because session is only ever written, not read
     private var sessionManager = SessionManager.shared
 
@@ -30,9 +34,9 @@ class TimerFunctionality {
     var selectedTab: Int = 0
     
     // Settings
-    // Auto start breaks and timer
-    var autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
+    var autoStartBreaks: Bool = true   // Auto start breaks and timer
     var selectedBackgroundNoise = AudioManager.backgroundNoiseOptions[0]
+    var showFocusLevelsPopup: Bool = true
 
     // State save for auto switch to long break
     var avgFocusForLongBreak: Double = 4
@@ -40,9 +44,9 @@ class TimerFunctionality {
 
     init() {
         // Load default settings
-        let focusTime = UserDefaults.standard.integer(forKey: "Focus")
-        let shortBreakTime = UserDefaults.standard.integer(forKey: "Short Break")
-        let longBreakTime = UserDefaults.standard.integer(forKey: "Long Break")
+        let focusTime = sharedDefaults.integer(forKey: "Focus")
+        let shortBreakTime = sharedDefaults.integer(forKey: "Short Break")
+        let longBreakTime = sharedDefaults.integer(forKey: "Long Break")
         
 //        tabs[0].1 = focusTime > 0 ? focusTime: tabs[0].1
             tabs[0].1 = 5
@@ -53,8 +57,9 @@ class TimerFunctionality {
         // Default to focus time on load
         remainingTimeInSecs = tabs[0].1
         
-        autoStartBreaks = UserDefaults.standard.bool(forKey: "autoStartBreaks")
-        selectedBackgroundNoise = UserDefaults.standard.string(forKey: "BGNoise") ?? AudioManager.backgroundNoiseOptions[0]
+        autoStartBreaks = sharedDefaults.bool(forKey: "autoStartBreaks")
+        selectedBackgroundNoise = sharedDefaults.string(forKey: "BGNoise") ?? AudioManager.backgroundNoiseOptions[0]
+        showFocusLevelsPopup = sharedDefaults.bool(forKey: "showFocusOnFocusEnd")
     }
     
     func resetTimerDur() {
@@ -76,10 +81,6 @@ class TimerFunctionality {
 
     func startTimer() {
         isTimerRunning = true
-        if (selectedTab == 0) {
-            // Increment session ID only for focus session
-            sessionManager.startNewSession()
-        }
         playBgAudio()
         CountdownLiveActivity.shared.startLiveActivity(duration: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
         DispatchQueue.main.async {
@@ -94,6 +95,14 @@ class TimerFunctionality {
                     if (self.selectedTab == 0) {
                         // Finished in Focus Mode
                         self.numCompleteFocusSessions += 1
+                        
+                        // Increment session ID only for focus session
+                        self.sessionManager.startNewSession()
+                        
+                        // If set, show focus levels logging pop up
+                        if (self.showFocusLevelsPopup) {
+                            self.popupManager.showPopup()
+                        }
                     }
                     self.stopTimer()
                     self.switchTab()
@@ -125,5 +134,6 @@ class TimerFunctionality {
         CountdownLiveActivity.shared.pauseLiveActivity(remainingTime:TimeInterval(remainingTimeInSecs))
         timer?.invalidate()
         timer = nil
+        
     }
 }

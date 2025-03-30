@@ -70,6 +70,7 @@ struct FocusStatsView: View {
             }
         }
         .padding()
+        .background(Color.pagePigment)
     }
     
     /*
@@ -78,10 +79,13 @@ struct FocusStatsView: View {
     private func isShowToastCondition(level: Int) -> Bool {
         let previousFocus = focusLevels.max(by: { $0.sessionId < $1.sessionId })?.level ?? 0
 
-        if level > previousFocus {
+        if sessionManager.sessionId == 0 {
+            toastMsg = "Finish a focus session to log your focus level."
+            resetSelectedFocus()
+        } else if sessionManager.sessionId > 1 && level > previousFocus {
             toastMsg = "Better focus! Good job!"
         } else if level < previousFocus && level < 3 {
-            toastMsg = "Uh oh"
+            toastMsg = "Uh oh."
         } else {
             return false
         }

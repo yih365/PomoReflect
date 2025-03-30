@@ -15,6 +15,7 @@ struct BoxBreathingView: View {
                 .font(.headline)
                 .multilineTextAlignment(.center)
                 .padding()
+                .foregroundColor(.black)
 
             // Placeholder for the box breathing diagram
             Image("box-diagram")

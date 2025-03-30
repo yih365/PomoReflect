@@ -16,7 +16,7 @@ class Notifs {
         
         let content = UNMutableNotificationContent()
         content.title = "Pomodoro Timer"
-        content.body = "Timer Ended!"
+        content.body = "Timer Ended! Log your focus level!"
         content.sound = .none
         content.categoryIdentifier = "bannerCategory"
         

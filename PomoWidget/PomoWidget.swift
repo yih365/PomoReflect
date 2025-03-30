@@ -29,7 +29,13 @@ struct Provider: AppIntentTimelineProvider {
 
     // Helper function to retrieve the focus time from UserDefaults
     private func getFocusTime() -> String {
-        return UserDefaults.standard.string(forKey: "Focus") ?? "25:00"
+        var secs = UserDefaults(suiteName: "group.com.yh.pomodorofocus")?.integer(forKey: "Focus") ?? 0
+        if secs == 0 {
+            secs = 25*60 // default to 25 mins
+        }
+//        return String(secs)
+        
+        return getTimeString(from: TimeInterval(secs))
     }
 }
 

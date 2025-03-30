@@ -13,21 +13,29 @@
 * Option for clock tick noise for focus bg noise
 * Page view feature: Hidden away page that contains focus tools, collapsibly to immerse user in the timer. Timer is always in view to be a reminder of the ticking time.
 * Page: Allows user to write in current task and take note of other thoughts during the session, and delete notes when finished
-* Page: Allow users to enter focus level for session and graph of data points
+* Page: Allow users to enter focus level for session and graph of data points (Surprise: toast for focus trends)
 * Page: Break exercises (box breathing, doodling)
-* Widget to open app
+* Widget to open app (screen shows the focus timer amount)
 
 ### Bugs
+* Line tweeks on graph after adding/changing focus level sometimes
+* Keep state for page view opened or not (maybe it is opened/pressed when going to home page action)
+* Clock tick start: Switched from none to alarm, no started session
 
 ### In progress:
+* Setting option: open to default break exercise on break start (none, doodling, breathing, mixed) (default: mixed)
 
 ### Wants:
+* dark mode
+
+* Begin breathing exercise button (start walk through of exercise)
+
 * Volume control for bg audio and timer
 - Timer louder (compared to background noise sounds)
 
 * Connect to spotify API or yt API for selection? (CAN BE SMTH REALLY SPECIAL HERE)
 
-* built-in white noise: The loop is weird, there exists noise that you can tell is end of the audio file (If really want and not worries about storage, use 60 min white noise audio)
+* built-in white noise: (If really want and not worries about storage, use 60 min white noise audio)
 
 ### Additional wants:
 * Add possibility for vibration alert

@@ -73,6 +73,7 @@
 		4B2081EC2CBDCB12002012B7 /* PomodoroReflectUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoroReflectUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B9265032D6695DB0034A270 /* PomoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PomoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B92654B2D66A10C0034A270 /* libSharedModelsLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSharedModelsLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BE6B5CD2D97B54F0070F282 /* PomoWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PomoWidgetExtension.entitlements; sourceTree = "<group>"; };
 		4BF75EB92D62EA1400A38EC0 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		4BF75EBB2D62EA1400A38EC0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -101,6 +102,7 @@
 				AudioManager.swift,
 				CountdownLiveActivity.swift,
 				Notifs.swift,
+				PopupManager.swift,
 				SessionManager.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
@@ -132,6 +134,7 @@
 				AudioManager.swift,
 				CountdownLiveActivity.swift,
 				Notifs.swift,
+				PopupManager.swift,
 				SessionManager.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
@@ -227,6 +230,7 @@
 		4B2081C72CBDCB11002012B7 = {
 			isa = PBXGroup;
 			children = (
+				4BE6B5CD2D97B54F0070F282 /* PomoWidgetExtension.entitlements */,
 				4B2081D22CBDCB11002012B7 /* PomodoroReflect */,
 				4B2081E52CBDCB12002012B7 /* PomodoroReflectTests */,
 				4B2081EF2CBDCB12002012B7 /* PomodoroReflectUITests */,
@@ -650,6 +654,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PomodoroReflect/PomodoroReflect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PomodoroReflect/Preview Content\"";
@@ -657,6 +662,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroReflect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PureFocus Pomodoro";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -682,6 +689,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PomodoroReflect/PomodoroReflect.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PomodoroReflect/Preview Content\"";
@@ -689,6 +697,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PomodoroReflect/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "PureFocus Pomodoro";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -701,7 +711,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = vips.PomodoroReflect;
+				PRODUCT_BUNDLE_IDENTIFIER = yh.PomodoroFocus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -782,6 +792,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PomoWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U4NQ6TW82F;
@@ -789,6 +800,7 @@
 				INFOPLIST_FILE = PomoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PomoWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -810,6 +822,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = PomoWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = U4NQ6TW82F;
@@ -817,6 +830,7 @@
 				INFOPLIST_FILE = PomoWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PomoWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -824,7 +838,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = vips.PomodoroReflect.PomoWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = yh.PomodoroFocus.PomoWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

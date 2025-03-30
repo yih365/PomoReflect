@@ -78,6 +78,7 @@ struct GoalWritingView: View {
                         note in
                         Text(note.text)
                             .listRowBackground(Color.white)
+                            .foregroundColor(.black)
                     }
                     .onDelete(perform: deleteNote)
                 }
@@ -88,6 +89,7 @@ struct GoalWritingView: View {
             Spacer()
         }
         .padding()
+        .background(Color.pagePigment)
     }
     
     private func deleteNote(offsets: IndexSet) {

@@ -17,6 +17,7 @@ struct DoodleView: View {
             Text("Begin doodling simple shapes and patterns")
                 .font(.headline)
                 .padding()
+                .foregroundColor(.black)
 
             Canvas { context, size in
                 for line in lines {

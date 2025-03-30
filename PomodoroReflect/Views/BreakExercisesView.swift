@@ -11,7 +11,8 @@ import SwiftUI
 struct BreakExercisesView: View {
     @State private var selectedExercise: ExerciseType = .breathing
     
-    private var bgColorSelected = Color.customBlue
+    @State private var timerFunctionality = TimerFunctionality.shared
+    
     private var bgColorUnselected = Color.white
 
     enum ExerciseType {
@@ -28,9 +29,8 @@ struct BreakExercisesView: View {
                     Text("Breathing")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(selectedExercise == .breathing ? bgColorSelected : bgColorUnselected)
+                        .background(getBgColor(for: .breathing))
                         .foregroundColor(getFgColor(for: .breathing))
-//                        .underline(selectedExercise != .breathing)
                         .cornerRadius(10)
                 }
 
@@ -40,9 +40,8 @@ struct BreakExercisesView: View {
                     Text("Doodling")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(selectedExercise == .doodling ? bgColorSelected : bgColorUnselected)
+                        .background(getBgColor(for: .doodling))
                         .foregroundColor(getFgColor(for: .doodling))
-//                        .underline(selectedExercise != .doodling)
                         .cornerRadius(10)
                 }
             }
@@ -57,13 +56,32 @@ struct BreakExercisesView: View {
             }
             Spacer()
         }
+        .background(Color.pagePigment)
+    }
+    
+    private func getBgColor(for exercise: ExerciseType) -> Color {
+        if (selectedExercise == exercise) {
+            if (timerFunctionality.selectedTab == 0) {
+                // Not in break tab
+                return .black
+            }
+            return Themes.shared.colors[timerFunctionality.selectedTab]
+        }
+        
+        return bgColorUnselected
     }
     
     private func getFgColor(for exercise: ExerciseType) -> Color {
         if (selectedExercise == exercise) {
             return .white
         }
-        return bgColorSelected
+        
+        if (timerFunctionality.selectedTab == 0) {
+            // Not on a break tab
+            return .black
+        }
+        
+        return Themes.shared.colors[timerFunctionality.selectedTab]
     }
 }
 

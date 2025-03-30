@@ -14,11 +14,11 @@ struct PomoWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: TimerActivityAttributes.self) { context in
             HStack {
-                Image(systemName:"AppIcon") // Make sure this image is in Assets.xcassets
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
+//                Image(systemName:"AppIcon") // Make sure this image is in Assets.xcassets
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: 30, height: 30)
+//                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 VStack {
                     Text(context.attributes.timerType)
                         .font(.headline)
@@ -36,6 +36,7 @@ struct PomoWidgetLiveActivity: Widget {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
+                .padding(.leading)
                 Spacer()
                 
                 // Play/Pause Button
@@ -61,12 +62,9 @@ struct PomoWidgetLiveActivity: Widget {
                         .font(.caption)
                 }
             } compactLeading: {
-                HStack {
-                    Image(systemName: "timer")
-                        .padding()
-                }
-                .background(Themes.shared.colorsDict[context.attributes.timerType])
-                .cornerRadius(8)
+                Image(systemName: "timer")
+                    .foregroundColor(Themes.shared.colorsDict[context.attributes.timerType])
+                    .padding()
             } compactTrailing: {
             } minimal: {
             }

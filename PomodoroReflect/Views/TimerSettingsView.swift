@@ -16,10 +16,12 @@ struct TimerSettingsView: View {
     @State private var focusTime = ""
     @State private var shortBreakTime = ""
     @State private var longBreakTime = ""
+    @State private var showFocusOnFocusEnd: Bool = false
     @Environment(\.dismiss) var dismiss
     var onSave: ((Bool) -> Void)? // Closure to handle save action
     
-    
+    let sharedDefaults = UserDefaults(suiteName: "group.com.yh.pomodorofocus") ?? UserDefaults.standard
+
     init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: ((Bool) -> Void)? = nil) {
         self._tabs = tabs
         self._autoStartBreaks = autoStartBreaks
@@ -28,6 +30,7 @@ struct TimerSettingsView: View {
         self._focusTime = State(initialValue: "\(tabs.wrappedValue[0].1 / 60)")
         self._shortBreakTime = State(initialValue: "\(tabs.wrappedValue[1].1 / 60)")
         self._longBreakTime = State(initialValue: "\(tabs.wrappedValue[2].1 / 60)")
+        self._showFocusOnFocusEnd = State(initialValue: sharedDefaults.bool(forKey: "showFocusOnFocusEnd"))
         self.onSave = onSave
     }
     
@@ -64,6 +67,15 @@ struct TimerSettingsView: View {
                     }
                 }
                 .pickerStyle(MenuPickerStyle()) // Dropdown style
+                
+                // Focus levels page settings
+                Section(header: Text("Focus Levels")) {
+                    Text("How to use focus levels: Record your perceived focus quality after each session to track your results over time.")
+                        .font(.caption)
+                    
+                    Toggle("Focus Levels prompt after Focus session end", isOn: $showFocusOnFocusEnd)
+                        .padding()
+                }
             }
             .navigationBarTitle("Settings", displayMode: .inline)
             .navigationBarItems(trailing: Button("Save") {
@@ -82,18 +94,20 @@ struct TimerSettingsView: View {
 
                 // Save to UserDefaults
                 if (oldFocus != tabs[0].1) {
-                    UserDefaults.standard.set(tabs[0].1, forKey: tabs[0].0)
+                    sharedDefaults.set(tabs[0].1, forKey: tabs[0].0)
                 }
                 if (oldShortTimer != tabs[1].1) {
-                    UserDefaults.standard.set(tabs[1].1, forKey: tabs[1].0)
+                    sharedDefaults.set(tabs[1].1, forKey: tabs[1].0)
                 }
                 if (oldLongTimer != tabs[2].1) {
-                    UserDefaults.standard.set(tabs[2].1, forKey: tabs[2].0)
+                    sharedDefaults.set(tabs[2].1, forKey: tabs[2].0)
                 }
                 
                 // Save to UserDefaults
-                UserDefaults.standard.set(autoStartBreaks, forKey: "autoStartBreaks")
-                UserDefaults.standard.set(selectedBackgroundNoise, forKey: "BGNoise")
+                sharedDefaults.set(autoStartBreaks, forKey: "autoStartBreaks")
+                sharedDefaults.set(selectedBackgroundNoise, forKey: "BGNoise")
+                
+                sharedDefaults.set(showFocusOnFocusEnd, forKey: "showFocusOnFocusEnd")
                 
                 // Reload widget
                 WidgetCenter.shared.reloadAllTimelines()
