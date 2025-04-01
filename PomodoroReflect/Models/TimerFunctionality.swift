@@ -15,7 +15,10 @@ class TimerFunctionality {
     
     let sharedDefaults = UserDefaults(suiteName: "group.com.yh.pomodorofocus") ?? UserDefaults.standard
     
+    // Managers
     private var popupManager = PopupManager.shared
+    private var breakManager = BreakManager.shared
+    private var tabStates = TabStates.shared
     
     // Don't need state here because session is only ever written, not read
     private var sessionManager = SessionManager.shared
@@ -83,6 +86,10 @@ class TimerFunctionality {
         isTimerRunning = true
         playBgAudio()
         CountdownLiveActivity.shared.startLiveActivity(duration: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
+        if (selectedTab != 0) {
+            // Set break tab states if started break session
+            tabStates.setBreakTabs(for: breakManager.selectedBreakType)
+        }
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 if self.remainingTimeInSecs > 0 {
@@ -91,7 +98,7 @@ class TimerFunctionality {
                     // Timer has finished
                     AudioManager.shared.playTimerEnd()
                     Notifs.scheduleTimerEndNotifications()
-                    CountdownLiveActivity.shared.stopLiveActivity()
+//                    CountdownLiveActivity.shared.stopLiveActivity()
                     if (self.selectedTab == 0) {
                         // Finished in Focus Mode
                         self.numCompleteFocusSessions += 1
@@ -123,6 +130,9 @@ class TimerFunctionality {
         }
         resetTimerDur()
         
+        // Update a live activity for this new tab
+        CountdownLiveActivity.shared.updateLiveActivity(remainingTime: TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0, isRunning: false)
+
         if (autoStartBreaks) {
             startTimer()
         }
@@ -131,7 +141,7 @@ class TimerFunctionality {
     func stopTimer() {
         isTimerRunning = false
         AudioManager.shared.stopBgAudio()
-        CountdownLiveActivity.shared.pauseLiveActivity(remainingTime:TimeInterval(remainingTimeInSecs))
+        CountdownLiveActivity.shared.pauseLiveActivity(remainingTime:TimeInterval(remainingTimeInSecs), timerType: tabs[selectedTab].0)
         timer?.invalidate()
         timer = nil
         

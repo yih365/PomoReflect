@@ -100,10 +100,12 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AudioManager.swift,
+				BreakManager.swift,
 				CountdownLiveActivity.swift,
 				Notifs.swift,
 				PopupManager.swift,
 				SessionManager.swift,
+				TabStates.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
 				types.swift,
@@ -132,10 +134,12 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AudioManager.swift,
+				BreakManager.swift,
 				CountdownLiveActivity.swift,
 				Notifs.swift,
 				PopupManager.swift,
 				SessionManager.swift,
+				TabStates.swift,
 				Themes.swift,
 				TimerActivityAttributes.swift,
 				types.swift,

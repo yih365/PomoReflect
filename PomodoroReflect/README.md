@@ -1,6 +1,8 @@
 ## Feature List
 * Three timers for (Focus, Short and Long Breaks), which run even when user is not in app
 * Settings for changing timer durations
+* Settings for allowing focus logging pop up
+* Settings for auto open break exercise
 * Keeps timer running when timer duration isnt changed but other settings are changed
 * Change timer countdown to finished! when timer done
 * Timer rings when pomodoro or break ends
@@ -19,16 +21,13 @@
 
 ### Bugs
 * Line tweeks on graph after adding/changing focus level sometimes
-* Keep state for page view opened or not (maybe it is opened/pressed when going to home page action)
 * Clock tick start: Switched from none to alarm, no started session
 
 ### In progress:
-* Setting option: open to default break exercise on break start (none, doodling, breathing, mixed) (default: mixed)
+* Begin breathing exercise button (start walk through of exercise) (use trae)
 
 ### Wants:
 * dark mode
-
-* Begin breathing exercise button (start walk through of exercise)
 
 * Volume control for bg audio and timer
 - Timer louder (compared to background noise sounds)

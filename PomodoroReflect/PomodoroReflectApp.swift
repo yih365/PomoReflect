@@ -10,14 +10,14 @@ import SwiftData
 
 @main
 struct PomodoroReflectApp: App {
-    @State private var mode = ViewMode.FullTimer
+//    @State private var mode = ViewMode.FullTimer
     @State private var timerViewHeightOffset: CGFloat = 0
     @State private var pageViewHeightOffset: CGFloat = 0
     @State private var timerViewHeight: CGFloat = 0 // Store TimerView height
     
+    // Managers
     @State private var popupManager = PopupManager.shared
-    
-    @AppStorage("lastOpenedTab") private var selectedTab: Int = 0
+    @State private var tabStates = TabStates.shared
 
     private var timerPageSplit = CGFloat(15)
     
@@ -60,7 +60,7 @@ struct PomodoroReflectApp: App {
     func getTimerViewHeight(geometry: GeometryProxy) -> CGFloat {
         var startViewHeight = CGFloat(0)
         let maxHeight = geometry.size.height * (timerPageSplit-1)/(timerPageSplit)
-        switch (mode) {
+        switch (tabStates.mode) {
         case ViewMode.FullTimer:
             startViewHeight = maxHeight
         case ViewMode.HalfTimer:
@@ -82,11 +82,11 @@ struct PomodoroReflectApp: App {
     }
     
     func timerViewNotNone() -> Bool {
-        return mode == ViewMode.FullPage && timerViewHeightOffset > 0
+        return tabStates.mode == ViewMode.FullPage && timerViewHeightOffset > 0
     }
     
     func pageViewNotNone() -> Bool {
-        return mode == ViewMode.FullTimer && timerViewHeightOffset < 0
+        return tabStates.mode == ViewMode.FullTimer && timerViewHeightOffset < 0
     }
     
     var body: some Scene {
@@ -95,8 +95,8 @@ struct PomodoroReflectApp: App {
                 ZStack{
                     VStack {
                         // Timer
-                        if (mode != ViewMode.FullPage || timerViewNotNone()) {
-                            TimerView(viewMode: $mode, onHeightChange: { height in
+                        if (tabStates.mode != ViewMode.FullPage || timerViewNotNone()) {
+                            TimerView(viewMode: $tabStates.mode, onHeightChange: { height in
                                 timerViewHeight = height
                             })
                             .frame(width: geometry.size.width, height: getTimerViewHeight(geometry: geometry))
@@ -105,14 +105,15 @@ struct PomodoroReflectApp: App {
                         // View expander toggle
                         VStack{
                             Button(action: {
-                                if (mode == ViewMode.FullTimer) {
-                                    mode = ViewMode.HalfTimer
+                                if (tabStates.mode == ViewMode.FullTimer) {
+                                    tabStates.mode = ViewMode.HalfTimer
                                 } else {
-                                    mode = ViewMode.FullTimer
+                                    tabStates.mode = ViewMode.FullTimer
                                 }
+                                print(tabStates.mode)
                             }) {
                                 HStack {
-                                    Image(systemName: mode == ViewMode.HalfTimer ? "chevron.down" : "chevron.up")
+                                    Image(systemName: tabStates.mode == ViewMode.HalfTimer ? "chevron.down" : "chevron.up")
                                         .foregroundColor(.black)
                                 }
                                 .frame(width: 200, height: 30)
@@ -128,8 +129,8 @@ struct PomodoroReflectApp: App {
                             .padding(.top, 10)
                             
                             // Page view
-                            if (mode != .FullTimer || pageViewNotNone()) {
-                                TabView(selection: $selectedTab) {
+                            if (tabStates.mode != .FullTimer || pageViewNotNone()) {
+                                TabView(selection: $tabStates.selectedTab) {
                                     ScrollView {
                                         GoalWritingView()
                                     }

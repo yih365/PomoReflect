@@ -21,6 +21,8 @@ struct TimerSettingsView: View {
     var onSave: ((Bool) -> Void)? // Closure to handle save action
     
     let sharedDefaults = UserDefaults(suiteName: "group.com.yh.pomodorofocus") ?? UserDefaults.standard
+    
+    let breakManager = BreakManager.shared
 
     init(tabs: Binding<[(String, Int)]>, autoStartBreaks: Binding<Bool>, selectedBackgroundNoise: Binding<String>, onSave: ((Bool) -> Void)? = nil) {
         self._tabs = tabs
@@ -35,6 +37,8 @@ struct TimerSettingsView: View {
     }
     
     var body: some View {
+        @Bindable var bindableBreakManager = breakManager
+        
         NavigationView {
             Form {
                 Section(header: Text("Set Timer Durations (Minutes)")) {
@@ -76,6 +80,17 @@ struct TimerSettingsView: View {
                     Toggle("Focus Levels prompt after Focus session end", isOn: $showFocusOnFocusEnd)
                         .padding()
                 }
+                
+                // Break exercises page settings
+                Section(header: Text("Break Exercises")) {
+                    Picker("Default open break exercise", selection: $bindableBreakManager.selectedBreakType) {
+                        ForEach(BreakManager.breakTypes, id: \.self) { exer in
+                            Text(exer).tag(exer)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle()) // Dropdown style
+                }
+                
             }
             .navigationBarTitle("Settings", displayMode: .inline)
             .navigationBarItems(trailing: Button("Save") {

@@ -10,44 +10,70 @@ import Foundation
 
 final class CountdownLiveActivity {
     static let shared = CountdownLiveActivity()
-    private var activityID: String?
+    private var activity: Activity<TimerActivityAttributes>?
 
     func startLiveActivity(duration: TimeInterval, timerType: String) {
-        stopLiveActivity()
-        
+        // If an activity already exists, update it instead of creating a new one
+        if let existingActivity = activity {
+            updateLiveActivity(remainingTime: duration, timerType: timerType, isRunning: true)
+            return
+        }
+
+        print("Start live activity")
         if ActivityAuthorizationInfo().areActivitiesEnabled {
-            let pomoWidgetAttributes = TimerActivityAttributes(timerType: timerType)
-            let initialState = TimerActivityAttributes.ContentState(endTime: Date.now.addingTimeInterval(duration), remainingTime: duration, timerRunning: true)
-            
+            let attributes = TimerActivityAttributes()
+            let initialState = TimerActivityAttributes.ContentState(
+                endTime: Date.now.addingTimeInterval(duration),
+                remainingTime: duration,
+                timerRunning: true,
+                timerType: timerType
+            )
+
             do {
-                let activity = try Activity.request(
-                    attributes: pomoWidgetAttributes,
+                let newActivity = try Activity.request(
+                    attributes: attributes,
                     content: .init(state: initialState, staleDate: Date().addingTimeInterval(duration)),
                     pushType: nil
                 )
-                activityID = activity.id
-                
-                print("Live Activity started: \(activity.id)")
+                activity = newActivity
+                print("Live Activity started: \(newActivity.id)")
             } catch {
-                // Handle other errors
-                print("An unexpected error occurred: \(error.localizedDescription)")
+                print("Failed to start Live Activity: \(error.localizedDescription)")
             }
         }
     }
-    
-    func pauseLiveActivity(remainingTime: TimeInterval) {
+
+    func updateLiveActivity(remainingTime: TimeInterval, timerType: String, isRunning: Bool) {
+        guard let existingActivity = activity else {
+            print("No active Live Activity to update")
+            return
+        }
+
+        let newState = TimerActivityAttributes.ContentState(
+            endTime: Date.now.addingTimeInterval(remainingTime),
+            remainingTime: remainingTime,
+            timerRunning: isRunning,
+            timerType: timerType
+        )
+
         Task {
-            // Pause the timer by updating the content
-            let newState = TimerActivityAttributes.ContentState(endTime: Date.now.addingTimeInterval(remainingTime), remainingTime: remainingTime, timerRunning: false)
-            let activity = Activity<TimerActivityAttributes>.activities.first(where: {$0.id == activityID})
             let updatedContent = ActivityContent(state: newState, staleDate: Date().addingTimeInterval(remainingTime))
-            await activity?.update(updatedContent)
+            await existingActivity.update(updatedContent)
+            print("Live Activity updated")
         }
     }
-    
+
+    func pauseLiveActivity(remainingTime: TimeInterval, timerType: String) {
+        updateLiveActivity(remainingTime: remainingTime, timerType: timerType, isRunning: false)
+    }
+
     func stopLiveActivity() {
         Task {
-            await Activity<TimerActivityAttributes>.activities.first(where: { $0.id == activityID })?.end(nil, dismissalPolicy: .immediate)
+            if let existingActivity = activity {
+                await existingActivity.end(nil, dismissalPolicy: .immediate)
+                print("Stopped live activity")
+                activity = nil // Clear the reference
+            }
         }
     }
 }

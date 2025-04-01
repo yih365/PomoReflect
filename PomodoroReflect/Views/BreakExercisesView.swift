@@ -9,39 +9,35 @@
 import SwiftUI
 
 struct BreakExercisesView: View {
-    @State private var selectedExercise: ExerciseType = .breathing
-    
     @State private var timerFunctionality = TimerFunctionality.shared
     
+    @State private var tabStates = TabStates.shared
+    
     private var bgColorUnselected = Color.white
-
-    enum ExerciseType {
-        case breathing, doodling
-    }
 
     var body: some View {
         VStack {
             // Buttons to switch exercises
             HStack {
                 Button(action: {
-                    selectedExercise = .breathing
+                    tabStates.selectedBreakTab = .breathing
                 }) {
                     Text("Breathing")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(getBgColor(for: .breathing))
-                        .foregroundColor(getFgColor(for: .breathing))
+                        .background(getBgColor(for: BreakTabs.breathing))
+                        .foregroundColor(getFgColor(for: BreakTabs.breathing))
                         .cornerRadius(10)
                 }
 
                 Button(action: {
-                    selectedExercise = .doodling
+                    tabStates.selectedBreakTab = .doodling
                 }) {
                     Text("Doodling")
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(getBgColor(for: .doodling))
-                        .foregroundColor(getFgColor(for: .doodling))
+                        .background(getBgColor(for: BreakTabs.doodling))
+                        .foregroundColor(getFgColor(for: BreakTabs.doodling))
                         .cornerRadius(10)
                 }
             }
@@ -49,7 +45,7 @@ struct BreakExercisesView: View {
 
             // Content area for selected exercise
             Spacer()
-            if selectedExercise == .breathing {
+            if tabStates.selectedBreakTab == .breathing {
                 BreathingExerciseView()
             } else {
                 DoodlingExerciseView()
@@ -59,8 +55,8 @@ struct BreakExercisesView: View {
         .background(Color.pagePigment)
     }
     
-    private func getBgColor(for exercise: ExerciseType) -> Color {
-        if (selectedExercise == exercise) {
+    private func getBgColor(for exercise: BreakTabs) -> Color {
+        if (tabStates.selectedBreakTab == exercise) {
             if (timerFunctionality.selectedTab == 0) {
                 // Not in break tab
                 return .black
@@ -71,8 +67,8 @@ struct BreakExercisesView: View {
         return bgColorUnselected
     }
     
-    private func getFgColor(for exercise: ExerciseType) -> Color {
-        if (selectedExercise == exercise) {
+    private func getFgColor(for exercise: BreakTabs) -> Color {
+        if (tabStates.selectedBreakTab == exercise) {
             return .white
         }
         
@@ -87,16 +83,12 @@ struct BreakExercisesView: View {
 
 struct BreathingExerciseView: View {
     var body: some View {
-//        Text("Breathing Exercise")
-//            .font(.title)
         BoxBreathingView()
     }
 }
 
 struct DoodlingExerciseView: View {
     var body: some View {
-//        Text("Doodling Exercise")
-//            .font(.title)
         DoodleView()
     }
 }

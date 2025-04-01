@@ -20,7 +20,7 @@ struct PomoWidgetLiveActivity: Widget {
 //                    .frame(width: 30, height: 30)
 //                    .clipShape(RoundedRectangle(cornerRadius: 6))
                 VStack {
-                    Text(context.attributes.timerType)
+                    Text(context.state.timerType)
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,16 +44,16 @@ struct PomoWidgetLiveActivity: Widget {
                     Image(systemName: context.state.timerRunning ? "pause.fill" : "play.fill")
                         .foregroundColor(.white)
                         .padding()
-                        .background(Themes.shared.colorsDict[context.attributes.timerType])
+                        .background(Themes.shared.colorsDict[context.state.timerType])
                         .clipShape(Circle())
                 }
             }
             .padding()
-            .activityBackgroundTint(Themes.shared.colorsDict[context.attributes.timerType])
+            .activityBackgroundTint(Themes.shared.colorsDict[context.state.timerType])
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Text(context.attributes.timerType)
+                    Text(context.state.timerType)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
                 }
@@ -63,7 +63,7 @@ struct PomoWidgetLiveActivity: Widget {
                 }
             } compactLeading: {
                 Image(systemName: "timer")
-                    .foregroundColor(Themes.shared.colorsDict[context.attributes.timerType])
+                    .foregroundColor(Themes.shared.colorsDict[context.state.timerType])
                     .padding()
             } compactTrailing: {
             } minimal: {
