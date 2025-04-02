@@ -71,7 +71,7 @@ class TimerFunctionality {
     }
     
     func playBgAudio() {
-        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise, isFocusTimer: selectedTab == 0)
+        AudioManager.shared.playBgAudio(selectedAudio: selectedBackgroundNoise, isFocusTimer: selectedTab == 0, isInSession: isTimerRunning)
     }
     
     func toggleTimer() {

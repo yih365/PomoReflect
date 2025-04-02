@@ -18,11 +18,12 @@ class AudioManager {
         //        "White Noise",
     ]
 
-    func playBgAudio(selectedAudio: String, isFocusTimer: Bool) {
+    func playBgAudio(selectedAudio: String, isFocusTimer: Bool, isInSession: Bool) {
         stopBgAudio()
         
-        if (!isFocusTimer) {
+        if (!isFocusTimer || !isInSession) {
             // Don't play any audio when not in focus timer
+            // or focus is not in session
             return
         }
         
