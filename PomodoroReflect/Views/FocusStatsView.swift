@@ -52,6 +52,7 @@ struct FocusStatsView: View {
                     Text("Focus Statistics")
                         .font(.title3)
                         .fontWeight(.bold)
+                        .foregroundColor(Color.black)
                     
                     HStack(spacing: 20) {
                         StatItemView(
@@ -99,12 +100,20 @@ struct FocusStatsView: View {
             Button(action: {
                 resetFocusLevels()
             }) {
-                Text("Reset Focus Levels")
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(10)
+                HStack {
+                    Image(systemName: "arrow.counterclockwise.circle.fill")
+                    Text("Reset Focus Levels")
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.red.opacity(0.8))
+                        .shadow(color: .red.opacity(0.3), radius: 4, x: 0, y: 2)
+                )
             }
+            .padding(.top, 10)
         }
         .padding()
         .background(Color.pagePigment)

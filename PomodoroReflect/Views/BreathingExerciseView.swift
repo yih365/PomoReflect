@@ -43,7 +43,7 @@ struct BoxBreathingView: View {
                 Text(isExercising ? "Stop Exercise" : "Start Exercise")
                     .foregroundColor(.white)
                     .padding()
-                    .background(timerFunctionality.selectedTab != 0 ? Color.customBlue : Color.black)
+                    .background(timerFunctionality.selectedTab != 0 ? Themes.shared.colors[timerFunctionality.selectedTab] : Color.black)
                     .cornerRadius(10)
             }
             .padding(.bottom, 40)  // Add bottom padding to button

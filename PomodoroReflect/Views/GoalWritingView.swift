@@ -58,7 +58,7 @@ struct GoalWritingView: View {
                 .font(.system(size: 20, weight: .semibold, design: .default))
                 .foregroundColor(.black)
                 .padding(.bottom, 2)
-
+            
             TextField("", text: $currNote,
                       prompt: Text("Note your extraneous thoughts").foregroundColor(.gray))
                 .foregroundColor(TFTextColor)
@@ -72,6 +72,11 @@ struct GoalWritingView: View {
                     }
                 }
             
+            Text("Write down your distracting thoughts and come back to them later.")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding(.bottom, 8)
+
             if (!notes.isEmpty) {
                 List {
                     ForEach(notes) {
