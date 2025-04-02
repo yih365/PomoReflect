@@ -9,20 +9,44 @@
 import SwiftUI
 
 struct BoxBreathingView: View {
+    @State private var isExercising = false
+    @StateObject private var boxAnimation = BoxBreathingAnimation()
+    @State private var timerFunctionality = TimerFunctionality.shared
+
     var body: some View {
         VStack {
-            Text("Breathe in, hold, breathe out, and hold (each for 4 seconds).\nImagine a box while you do this.")
-                .font(.headline)
+            Text("Box Breathing Exercise")
+                .font(.title2)
+//                .padding(.bottom)
+                .foregroundColor(.black)
+            
+            Text("Breathe in, hold, breathe out, and hold (each for 4 seconds).")
+                .font(.caption)
                 .multilineTextAlignment(.center)
-                .padding()
+//                .padding()
                 .foregroundColor(.black)
 
-            // Placeholder for the box breathing diagram
-            Image("box-diagram")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 200, height: 200)
-                .padding()
+            BoxBreathingAnimationView(animation: boxAnimation)
+                .padding(40)
+                .frame(height: 300)  // Add fixed height to ensure consistent spacing
+            
+            Spacer()  // Add spacer to push button to bottom
+            
+            Button(action: {
+                isExercising.toggle()
+                if isExercising {
+                    boxAnimation.startAnimation()
+                } else {
+                    boxAnimation.stopAnimation()
+                }
+            }) {
+                Text(isExercising ? "Stop Exercise" : "Start Exercise")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(timerFunctionality.selectedTab != 0 ? Color.customBlue : Color.black)
+                    .cornerRadius(10)
+            }
+            .padding(.bottom, 40)  // Add bottom padding to button
         }
         .padding()
     }

@@ -20,9 +20,10 @@
 * Widget to open app (screen shows the focus timer amount)
 
 ### Bugs
+* clock tick need to start when saved and focus already in session
 
 ### In progress:
-* Begin breathing exercise button (start walk through of exercise) (use trae)
+* Avg focus level and other stats
 
 ### Wants:
 * dark mode

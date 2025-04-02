@@ -14,7 +14,7 @@ struct FocusStatsView: View {
     @Query private var focusLevels: [FocusLevel]
     
     // Max session shown in graph at once
-    private var graphLimit = 10
+    private var graphLimit = 15
 
     var body: some View {
         VStack {
