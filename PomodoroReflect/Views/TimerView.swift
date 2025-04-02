@@ -93,12 +93,13 @@ struct TimerView: View {
                                     .font(.title2)
                             }
                             .foregroundColor(Themes.shared.colors[timer.selectedTab])
-                            .padding(7)
+                            .padding(5)
                             .background(.white)
                             .cornerRadius(10)
                         }
                     }
-                    .padding(10)
+                    .padding(.vertical, 5)  // Consistent padding regardless of timer state
+                    .padding(.horizontal, 10)
                     .background(Themes.shared.colors[timer.selectedTab])
                     .cornerRadius(15)
                 } else {

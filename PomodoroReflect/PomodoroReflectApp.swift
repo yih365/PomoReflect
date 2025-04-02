@@ -64,7 +64,8 @@ struct PomodoroReflectApp: App {
         case ViewMode.FullTimer:
             startViewHeight = maxHeight
         case ViewMode.HalfTimer:
-            startViewHeight = 200
+            // Reduced height for HalfTimer mode
+            startViewHeight = 150
         case ViewMode.FullPage:
             startViewHeight = 0
         }
