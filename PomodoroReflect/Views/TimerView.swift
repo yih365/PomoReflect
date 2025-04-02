@@ -144,7 +144,7 @@ struct TimerView: View {
         .onAppear(
             perform: loadDefaultSettings
         )
-        .frame(width: UIScreen.main.bounds.width)
+        // .frame(width: UIScreen.main.bounds.width)
         .overlay(
             GeometryReader { geo in
                 Color.clear

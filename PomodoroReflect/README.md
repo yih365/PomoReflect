@@ -20,8 +20,6 @@
 * Widget to open app (screen shows the focus timer amount)
 
 ### Bugs
-* Line tweeks on graph after adding/changing focus level sometimes
-* Use window size instead of screen size? idk weird position of settings for mac
 
 ### In progress:
 * Begin breathing exercise button (start walk through of exercise) (use trae)
