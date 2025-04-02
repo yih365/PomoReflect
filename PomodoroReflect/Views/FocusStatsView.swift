@@ -46,15 +46,52 @@ struct FocusStatsView: View {
                 resetSelectedFocus()
             }
             
+            // Stats section moved before chart
+            if !focusLevels.isEmpty {
+                VStack(spacing: 16) {
+                    Text("Focus Statistics")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                    
+                    HStack(spacing: 20) {
+                        StatItemView(
+                            title: "Average",
+                            value: String(format: "%.1f", Double(focusLevels.map { $0.level }.reduce(0, +)) / Double(focusLevels.count)),
+                            subtitle: "Focus Level"
+                        )
+                        
+                        StatItemView(
+                            title: "Highest",
+                            value: "\(focusLevels.map { $0.level }.max() ?? 0)",
+                            subtitle: "Achievement"
+                        )
+                        
+                        StatItemView(
+                            title: "Total",
+                            value: "\(focusLevels.count)",
+                            subtitle: "Sessions"
+                        )
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.white)
+                        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+                )
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+            }
+            
             FocusLevelChart(graphLimit: graphLimit)
                 .padding()
                 .overlay(
                     VStack {
-                        Spacer() // Pushes toast to the bottom
+                        Spacer()
                         if showToast {
                             ToastView(message: toastMsg)
                                 .transition(.opacity)
-                                .padding(.bottom, 40) // Adjust position
+                                .padding(.bottom, 40)
                         }
                     }
                 )
@@ -161,4 +198,27 @@ struct ToastView: View {
 #Preview {
     FocusStatsView()
         .modelContainer(for: FocusLevel.self, inMemory:true)
+}
+
+
+struct StatItemView: View {
+    let title: String
+    let value: String
+    let subtitle: String
+    
+    var body: some View {
+        VStack(spacing: 4) {
+            Text(title)
+                .font(.caption)
+                .foregroundColor(.gray)
+            Text(value)
+                .font(.title2)
+                .fontWeight(.bold)
+                .foregroundColor(.black)
+            Text(subtitle)
+                .font(.caption2)
+                .foregroundColor(.gray)
+        }
+        .frame(minWidth: 80)
+    }
 }

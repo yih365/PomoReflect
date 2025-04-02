@@ -23,7 +23,6 @@
 * clock tick need to start when saved and focus already in session
 
 ### In progress:
-* Avg focus level and other stats
 
 ### Wants:
 * dark mode
