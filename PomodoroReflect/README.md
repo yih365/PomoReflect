@@ -22,6 +22,7 @@
 ### Bugs
 
 ### In progress:
+* Move half timer to be higher
 
 ### Wants:
 * dark mode

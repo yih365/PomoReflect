@@ -90,6 +90,7 @@ class TimerFunctionality {
             // Set break tab states if started break session
             tabStates.setBreakTabs(for: breakManager.selectedBreakType)
         }
+        let savedPrevSessionDur = tabs[selectedTab].1
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
                 if self.remainingTimeInSecs > 0 {
@@ -104,7 +105,7 @@ class TimerFunctionality {
                         self.numCompleteFocusSessions += 1
                         
                         // Increment session ID only for focus session
-                        self.sessionManager.startNewSession()
+                        self.sessionManager.startNewSession(prevSessionDuration: savedPrevSessionDur)
                         
                         // If set, show focus levels logging pop up
                         if (self.showFocusLevelsPopup) {

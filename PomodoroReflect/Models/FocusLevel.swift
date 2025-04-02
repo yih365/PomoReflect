@@ -10,12 +10,15 @@ import SwiftData
 
 @Model
 final class FocusLevel {
-    // Focus level ranging from 1-5
     var sessionId: Int
     var level: Int
-
-    init(level: Int, sessionId: Int) {
+    var timestamp: Date
+    var sessionDuration: Int  // in minutes
+    
+    init(level: Int, sessionId: Int, sessionDuration: Int) {
         self.level = level
         self.sessionId = sessionId
+        self.timestamp = Date()
+        self.sessionDuration = sessionDuration
     }
 }
