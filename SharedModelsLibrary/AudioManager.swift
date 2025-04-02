@@ -22,8 +22,7 @@ class AudioManager {
         stopBgAudio()
         
         if (!isFocusTimer) {
-            // Play silent noise when not focus timer
-            playSilentAudio()
+            // Don't play any audio when not in focus timer
             return
         }
         
@@ -33,7 +32,6 @@ class AudioManager {
                 break
         case AudioManager.backgroundNoiseOptions[1]:
                 playTickAudio()
-//                playWhiteNoiseAudio()
                 break
         default:
             print("Error in selected audio.")
@@ -42,6 +40,7 @@ class AudioManager {
     
     func playBgAudio(url: URL) {
         do {
+            print("playing bg audio")
             // Set up the audio session for background playback
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options:[.mixWithOthers])
             try AVAudioSession.sharedInstance().setActive(true)
@@ -68,6 +67,7 @@ class AudioManager {
     }
     
     func playTickAudio() {
+        print("playing tick audio")
         let tickNoiseURL = Bundle.main.url(forResource: "two-tick", withExtension: "mp3")!
         playBgAudio(url: tickNoiseURL)
     }

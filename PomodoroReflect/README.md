@@ -21,7 +21,7 @@
 
 ### Bugs
 * Line tweeks on graph after adding/changing focus level sometimes
-* Clock tick start: Switched from none to alarm, no started session
+* Use window size instead of screen size? idk weird position of settings for mac
 
 ### In progress:
 * Begin breathing exercise button (start walk through of exercise) (use trae)
@@ -35,6 +35,8 @@
 * Connect to spotify API or yt API for selection? (CAN BE SMTH REALLY SPECIAL HERE)
 
 * built-in white noise: (If really want and not worries about storage, use 60 min white noise audio)
+
+* same settings and data between devices
 
 ### Additional wants:
 * Add possibility for vibration alert
