@@ -11,6 +11,14 @@ struct FocusStatsView: View {
     var body: some View {
         VStack {
             FocusLogView()
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.white)
+                        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+                )
+                .padding(.horizontal)
+                .padding(.bottom, 10)
             
             // Stats section
             if !focusLevels.isEmpty {

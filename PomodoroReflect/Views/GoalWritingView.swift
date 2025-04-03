@@ -51,8 +51,22 @@ struct GoalWritingView: View {
                 .foregroundColor(TFTextColor)
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
-                .padding(.bottom, textBoxBottomPadding)
+                .padding(.bottom, 5)
                 .font(.system(size: 15, weight: .regular, design: .default))
+            
+            Text("Make it specific and achievable within this session")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding(.bottom, 4)
+            
+            Button(action: {
+                showGoalExamples()
+            }) {
+                Text("See example goals")
+                    .font(.caption)
+                    .foregroundColor(.blue)
+            }
+            .padding(.bottom, textBoxBottomPadding)
 
             Text("Extraneous thoughts during session:")
                 .font(.system(size: 20, weight: .semibold, design: .default))
@@ -65,8 +79,8 @@ struct GoalWritingView: View {
                 .padding()
                 .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
                 .font(.system(size: 15, weight: .regular, design: .default))
+                .padding(.bottom, 5)
                 .onSubmit {
-                    // Add note unless empty
                     if (!currNote.isEmpty) {
                         saveNote()
                     }
@@ -76,7 +90,7 @@ struct GoalWritingView: View {
                 .font(.caption)
                 .foregroundColor(.gray)
                 .padding(.bottom, 8)
-
+            
             if (!notes.isEmpty) {
                 List {
                     ForEach(notes) {
@@ -104,6 +118,29 @@ struct GoalWritingView: View {
                 modelContext.delete(notes[index])
             }
         }
+    }
+    
+    private func showGoalExamples() {
+        let examples = [
+            "• Complete section 3.2 of my research paper",
+            "• Write test cases for the new feature",
+            "• Read and summarize chapter 4",
+            "• Solve 5 practice problems",
+            "• Draft outline for presentation"
+        ]
+        
+        // Show examples in an alert
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else { return }
+        
+        let alert = UIAlertController(
+            title: "Example Goals",
+            message: examples.joined(separator: "\n"),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        window.rootViewController?.present(alert, animated: true)
     }
     
     private func saveNote() {
