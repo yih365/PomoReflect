@@ -24,6 +24,8 @@
 ### In progress:
 
 ### Wants:
+* manu bar countdown for macbook
+
 * dark mode
 
 * Volume control for bg audio and timer

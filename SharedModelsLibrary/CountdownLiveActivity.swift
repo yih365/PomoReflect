@@ -14,7 +14,7 @@ final class CountdownLiveActivity {
 
     func startLiveActivity(duration: TimeInterval, timerType: String) {
         // If an activity already exists, update it instead of creating a new one
-        if let existingActivity = activity {
+        if activity != nil {
             updateLiveActivity(remainingTime: duration, timerType: timerType, isRunning: true)
             return
         }

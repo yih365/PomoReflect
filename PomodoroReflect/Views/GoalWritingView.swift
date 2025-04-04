@@ -96,13 +96,20 @@ struct GoalWritingView: View {
                     ForEach(notes) {
                         note in
                         Text(note.text)
-                            .listRowBackground(Color.white)
+                            .padding(10)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                            .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                            .listRowBackground(Color.pagePigment)
                             .foregroundColor(.black)
+                            .listRowSeparator(.hidden)
                     }
                     .onDelete(perform: deleteNote)
                 }
                 .frame(height: 200)
                 .scrollContentBackground(.hidden)
+                .listStyle(PlainListStyle())
             }
 
             Spacer()

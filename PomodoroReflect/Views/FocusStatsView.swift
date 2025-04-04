@@ -9,7 +9,7 @@ struct FocusStatsView: View {
     private var graphLimit = 15
 
     var body: some View {
-        VStack {
+        VStack(spacing: 10) { // Reduced VStack spacing
             FocusLogView()
                 .padding()
                 .background(
@@ -18,7 +18,7 @@ struct FocusStatsView: View {
                         .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
                 )
                 .padding(.horizontal)
-                .padding(.bottom, 10)
+                .padding(.bottom, 5) // Reduced padding
             
             // Stats section
             if !focusLevels.isEmpty {
@@ -55,7 +55,7 @@ struct FocusStatsView: View {
                         .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
                 )
                 .padding(.horizontal)
-                .padding(.bottom, 10)
+                .padding(.bottom, 5) // Reduced padding
             }
             
             Picker("Chart Type", selection: $selectedChartType) {
@@ -66,7 +66,7 @@ struct FocusStatsView: View {
             .padding(.horizontal)
             
             FocusLevelChart(graphLimit: graphLimit, chartType: selectedChartType)
-                .padding()
+                .padding([.horizontal, .top]) // Removed bottom padding
             
             Button(action: {
                 resetFocusLevels()
@@ -84,9 +84,9 @@ struct FocusStatsView: View {
                         .shadow(color: .red.opacity(0.3), radius: 4, x: 0, y: 2)
                 )
             }
-            .padding(.top, 10)
+            .padding(.vertical, 10) // Adjusted padding
         }
-        .padding()
+        .padding([.horizontal, .top]) // Removed bottom padding from main VStack
         .background(Color.pagePigment)
     }
     
