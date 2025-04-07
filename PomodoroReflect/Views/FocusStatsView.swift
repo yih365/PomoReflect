@@ -8,86 +8,114 @@ struct FocusStatsView: View {
     @State private var selectedChartType: ChartType = .daily
     private var graphLimit = 15
 
+    init() {
+        UISegmentedControl.appearance().selectedSegmentTintColor = .white
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.black], for: .selected)
+        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+    }
+
     var body: some View {
-        VStack(spacing: 10) { // Reduced VStack spacing
-            FocusLogView()
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.white)
-                        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
-                )
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 10) { // Reduced VStack spacing
+                FocusLogView()
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.white)
+                            .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom, 5) // Reduced padding
+                
+                Picker("Chart Type", selection: $selectedChartType) {
+                    Text("Daily").tag(ChartType.daily)
+                    Text("Weekly").tag(ChartType.weekly)
+                }
+                .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)
-                .padding(.bottom, 5) // Reduced padding
-            
-            // Stats section
-            if !focusLevels.isEmpty {
-                VStack(spacing: 16) {
-                    Text("Focus Statistics")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color.black)
-                    
-                    HStack(spacing: 20) {
-                        StatItemView(
-                            title: "Average",
-                            value: String(format: "%.1f", Double(focusLevels.map { $0.level }.reduce(0, +)) / Double(focusLevels.count)),
-                            subtitle: "Focus Level"
-                        )
+                .background(Color.clear)
+                .tint(.white)  // Selected background color
+                .foregroundStyle(.black) // Selected text color
+                
+                // Stats section
+                if !focusLevels.isEmpty {
+                    VStack(spacing: 16) {
+                        Text("Focus Statistics")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.black)
                         
-                        StatItemView(
-                            title: "Highest",
-                            value: "\(focusLevels.map { $0.level }.max() ?? 0)",
-                            subtitle: "Achievement"
-                        )
+                        let relevantLevels = selectedChartType == .daily ?
+                            focusLevels.filter {
+                                let twentyFourHoursAgo = Calendar.current.date(byAdding: .hour, value: -24, to: Date()) ?? Date()
+                                return $0.timestamp >= twentyFourHoursAgo
+                            } :
+                            Array(calculateWeeklyFocusLevels())
                         
-                        StatItemView(
-                            title: "Total",
-                            value: "\(focusLevels.count)",
-                            subtitle: "Sessions"
-                        )
+                        if !relevantLevels.isEmpty {
+                            HStack(spacing: 20) {
+                                StatItemView(
+                                    title: "Average",
+                                    value: String(format: "%.1f", Double(relevantLevels.map { $0.level }.reduce(0, +)) / Double(relevantLevels.count)),
+                                    subtitle: "Focus Level"
+                                )
+                                
+                                StatItemView(
+                                    title: "Highest",
+                                    value: "\(relevantLevels.map { $0.level }.max() ?? 0)",
+                                    subtitle: "Achievement"
+                                )
+                                
+                                StatItemView(
+                                    title: "Total",
+                                    value: "\(relevantLevels.count)",
+                                    subtitle: "Sessions"
+                                )
+                            }
+                        } else {
+                            Text("No data for the selected period")
+                                .foregroundColor(.gray)
+                        }
                     }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color.white)
+                            .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+                    )
+                    .padding(.horizontal)
+                    .padding(.bottom, 5) // Reduced padding
                 }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 15)
-                        .fill(Color.white)
-                        .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
-                )
-                .padding(.horizontal)
-                .padding(.bottom, 5) // Reduced padding
-            }
-            
-            Picker("Chart Type", selection: $selectedChartType) {
-                Text("Daily").tag(ChartType.daily)
-                Text("Weekly").tag(ChartType.weekly)
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.horizontal)
-            
-            FocusLevelChart(graphLimit: graphLimit, chartType: selectedChartType)
-                .padding([.horizontal, .top]) // Removed bottom padding
-            
-            Button(action: {
-                resetFocusLevels()
-            }) {
-                HStack {
-                    Image(systemName: "arrow.counterclockwise.circle.fill")
-                    Text("Reset Focus Levels")
+                
+                FocusLevelChart(graphLimit: graphLimit, chartType: selectedChartType)
+                    .padding(.horizontal)
+                    .frame(height: 400) // Fixed height for chart
+                
+                Button(action: {
+                    resetFocusLevels()
+                }) {
+                    HStack {
+                        Image(systemName: "arrow.counterclockwise.circle.fill")
+                        Text("Reset Focus Levels")
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.red.opacity(0.8))
+                            .shadow(color: .red.opacity(0.3), radius: 4, x: 0, y: 2)
+                    )
                 }
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.red.opacity(0.8))
-                        .shadow(color: .red.opacity(0.3), radius: 4, x: 0, y: 2)
-                )
+                .padding(.vertical)
             }
-            .padding(.vertical, 10) // Adjusted padding
+            .padding(.top)
+            .padding(.bottom, 30) // Add extra bottom padding
         }
-        .padding([.horizontal, .top]) // Removed bottom padding from main VStack
         .background(Color.pagePigment)
+        .safeAreaInset(edge: .bottom) { // Add safe area inset
+            Color.clear.frame(height: 20)
+        }
     }
     
     private func resetFocusLevels() {
@@ -105,6 +133,31 @@ struct FocusStatsView: View {
             sessionManager.resetSession()
         } catch {
             print("Error resetting focus levels: \(error)")
+        }
+    }
+    
+    private func calculateWeeklyFocusLevels() -> [FocusLevel] {
+        let calendar = Calendar.current
+        
+        // Group focus levels by week
+        let grouped = Dictionary(grouping: focusLevels) { level in
+            calendar.dateComponents([.weekOfYear, .year], from: level.timestamp)
+        }
+        
+        // Sort weeks chronologically and get the same weeks as shown in the chart
+        let sortedWeeks = grouped.keys.sorted { comp1, comp2 in
+            guard let date1 = calendar.date(from: comp1),
+                  let date2 = calendar.date(from: comp2) else {
+                return false
+            }
+            return date1 > date2
+        }
+        
+        let numberOfWeeks = min(sortedWeeks.count, max(50, sortedWeeks.count))
+        let weeksToShow = Array(sortedWeeks.prefix(numberOfWeeks))
+        
+        return weeksToShow.flatMap { weekComp in
+            grouped[weekComp] ?? []
         }
     }
 }

@@ -1,3 +1,9 @@
+## Selling points / points of value
+* Entire app has clear focus on the timer (1. immersive view centered on timer with no other distractions, 2. every page will still have the timer at the top of the view to remind users of it during sessions)
+* Goal page: User can write down their goal to keep them grounded in it during their session, user can write down extraneous thoughts in the app, in a way forcing them to set aside extraneous thoughts not related to the goal (AWARENESS + ACTION)
+* Focus levels page: User is aware of their recent and focus levels trend. This + app in general keeps the user focused and AWARE of their focus levels. So when distracting thoughts come, they are made aware and set aside. Ex. I am made more aware of when my focus levels are low and can quantify it. I can also look toward my avg and then think ok I'm not doing that bad. User can also look at their week over week chart to compare how they are doing now vs before. (AWARENESS)
+* Break exercises page: Forces the user to do exercises that improve focus during focus session. (ACTION)
+
 ## Feature List
 * Three timers for (Focus, Short and Long Breaks), which run even when user is not in app
 * Settings for changing timer durations
@@ -22,9 +28,12 @@
 ### Bugs
 
 ### In progress:
+* Are there overall UI improvements? (look for UI examples for sources of inspo)
 
 ### Wants:
-* manu bar countdown for macbook
+* Info icon opens suggestions for why focus levels are low (maybe questionnaire here, like are you sleeping well, are you stressed, this makes it more interactive) (but also idk bc will it really be effective)
+
+* menu bar countdown for macbook
 
 * dark mode
 

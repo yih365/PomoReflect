@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SharedModelsLibrary  // Add this import
 
 @Model
 final class FocusLevel {
@@ -18,7 +19,8 @@ final class FocusLevel {
     init(level: Int, sessionId: Int, sessionDuration: Int) {
         self.level = level
         self.sessionId = sessionId
-        self.timestamp = Date()
+        let calendar = getLocalCalendar()
+        self.timestamp = calendar.startOfDay(for: Date())
         self.sessionDuration = sessionDuration
     }
 }

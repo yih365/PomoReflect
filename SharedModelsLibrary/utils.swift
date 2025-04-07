@@ -18,3 +18,9 @@ func getSecsString(from timeInterval: TimeInterval) -> String {
 func getMinsString(from timeInterval: TimeInterval) -> String {
     return String(format: "%02d", (NSInteger(timeInterval)/60) % 60)
 }
+
+func getLocalCalendar() -> Calendar {
+    var calendar = Calendar.current
+    calendar.timeZone = TimeZone.current
+    return calendar
+}

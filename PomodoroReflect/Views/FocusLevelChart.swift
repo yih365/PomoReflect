@@ -16,12 +16,13 @@ enum ChartType {
 
 struct FocusLevelChart: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var focusLevels: [FocusLevel]
+    @Query(sort: \FocusLevel.timestamp, order: .reverse) private var focusLevels: [FocusLevel]
     
     private var graphLimit: Int
     private var chartType: ChartType
     
     init(graphLimit: Int, chartType: ChartType = .daily) {
+        self._focusLevels = Query(sort: \FocusLevel.timestamp, order: .reverse)
         self.graphLimit = graphLimit
         self.chartType = chartType
     }
@@ -41,8 +42,24 @@ struct FocusLevelChart: View {
         }
     }
     
+    private func getTodayFocusLevels() -> [FocusLevel] {
+        let calendar = getLocalCalendar()
+        let now = Date()
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        
+        let todayFocusLevels = focusLevels.filter { level in
+            let levelComponents = calendar.dateComponents([.year, .month, .day], from: level.timestamp)
+            let matches = levelComponents.year == todayComponents.year &&
+                       levelComponents.month == todayComponents.month &&
+                       levelComponents.day == todayComponents.day
+            return matches
+        }.sorted(by: { $0.sessionId > $1.sessionId })
+        
+        return todayFocusLevels
+    }
+
     private var dailyChart: some View {
-        Chart(focusLevels.sorted(by: {$0.sessionId > $1.sessionId})) { focus in
+        return Chart(getTodayFocusLevels()) { focus in
             LineMark(
                 x: .value("Session", focus.sessionId),
                 y: .value("Focus Level", focus.level)
@@ -73,13 +90,22 @@ struct FocusLevelChart: View {
     private var weeklyChart: some View {
         let weeklyData = calculateWeeklyAverages()
         return Chart(weeklyData) { data in
-            BarMark(
-                x: .value("Day", data.day),
+            LineMark(
+                x: .value("Week", data.day),
                 y: .value("Average Focus", data.average)
             )
             .foregroundStyle(Color.dullRed)
+            .symbol(.circle)
         }
         .chartYScale(domain: 0...5)
+        .chartXAxis {
+            AxisMarks { _ in
+                AxisGridLine().foregroundStyle(Color.gray)
+                AxisTick().foregroundStyle(Color.gray)
+                AxisValueLabel()
+                    .foregroundStyle(Color.gray)
+            }
+        }
         .chartYAxis {
             AxisMarks(position: .leading, values: .stride(by: 1)) { value in
                 AxisGridLine().foregroundStyle(Color.gray)
@@ -98,33 +124,51 @@ struct FocusLevelChart: View {
     
     private func calculateWeeklyAverages() -> [WeeklyFocusData] {
         let calendar = Calendar.current
+        
+        // Group focus levels by week
         let grouped = Dictionary(grouping: focusLevels) { level in
-            calendar.component(.weekday, from: level.timestamp)
+            print(level.timestamp)
+            return calendar.dateComponents([.weekOfYear, .year], from: level.timestamp)
         }
         
-        return (1...7).compactMap { weekday in
-            let levels = grouped[weekday] ?? []
-            guard !levels.isEmpty else { return nil }
-            
+        // Sort weeks chronologically
+        let sortedWeeks = grouped.keys.sorted { comp1, comp2 in
+            guard let date1 = calendar.date(from: comp1),
+                  let date2 = calendar.date(from: comp2) else {
+                return false
+            }
+            return date1 > date2
+        }
+        
+        // Take last n weeks (n = max(50, number of weeks))
+        let numberOfWeeks = min(sortedWeeks.count, max(50, sortedWeeks.count))
+        let weeksToShow = Array(sortedWeeks.prefix(numberOfWeeks))
+        
+        return weeksToShow.enumerated().map { index, weekComp in
+            let levels = grouped[weekComp] ?? []
             let average = Double(levels.map(\.level).reduce(0, +)) / Double(levels.count)
+            
+            // Format week label (e.g., "W1")
+            let weekLabel = "W\(numberOfWeeks - index)"
+            
             return WeeklyFocusData(
-                day: calendar.weekdaySymbols[weekday - 1],
+                day: weekLabel,
                 average: average
             )
         }
     }
     
     private func getLowerBound() -> Int {
-        return (focusLevels.map{ $0.sessionId }).min() ?? 1
+        return (getTodayFocusLevels().map{ $0.sessionId }).min() ?? 1
     }
     
     private func getUpperBound() -> Int {
-        return (focusLevels.map{ $0.sessionId }).max() ?? graphLimit
+        return (getTodayFocusLevels().map{ $0.sessionId }).max() ?? graphLimit
     }
 }
 
 struct WeeklyFocusData: Identifiable {
     let id = UUID()
-    let day: String
+    let day: String  // Represents the week label (e.g., "W1", "W2", etc.)
     let average: Double
 }
