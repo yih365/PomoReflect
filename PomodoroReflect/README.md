@@ -21,14 +21,13 @@
 * Option for clock tick noise for focus bg noise
 * Page view feature: Hidden away page that contains focus tools, collapsibly to immerse user in the timer. Timer is always in view to be a reminder of the ticking time.
 * Page: Allows user to write in current task and take note of other thoughts during the session, and delete notes when finished
-* Page: Allow users to enter focus level for session and graph of data points (Surprise: toast for focus trends)
+* Page: Allow users to enter focus level for session and graph of data points, including chart for 24 hrs and 1 yr (Surprise: toast for focus trends)
 * Page: Break exercises (box breathing, doodling)
 * Widget to open app (screen shows the focus timer amount)
 
 ### Bugs
 
 ### In progress:
-* Are there overall UI improvements? (look for UI examples for sources of inspo)
 
 ### Wants:
 * Info icon opens suggestions for why focus levels are low (maybe questionnaire here, like are you sleeping well, are you stressed, this makes it more interactive) (but also idk bc will it really be effective)

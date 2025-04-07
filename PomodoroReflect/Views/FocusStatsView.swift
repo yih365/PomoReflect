@@ -28,8 +28,8 @@ struct FocusStatsView: View {
                     .padding(.bottom, 5) // Reduced padding
                 
                 Picker("Chart Type", selection: $selectedChartType) {
-                    Text("Daily").tag(ChartType.daily)
-                    Text("Weekly").tag(ChartType.weekly)
+                    Text("24 Hrs").tag(ChartType.daily)
+                    Text("1 Yr").tag(ChartType.weekly)
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal)

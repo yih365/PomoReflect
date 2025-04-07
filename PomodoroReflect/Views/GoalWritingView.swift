@@ -40,76 +40,97 @@ struct GoalWritingView: View {
     @Query private var notes: [Note]
 
     var body: some View {
-        VStack {
-            Text("Goal for this session:")
-                .font(.system(size: 20, weight: .semibold, design: .default))
-                .foregroundColor(.black)
-                .padding(.bottom, 2)
+        VStack(alignment: .leading, spacing: 20) {
+            // Goal Section
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    // Image(systemName: "target") 
+                    //     .foregroundColor(.blue)
+                    Text("Session Goal")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
+                }
 
-            TextField("", text: $goalViewModel.text,
-                      prompt: Text("Enter your goal").foregroundColor(.gray))
-                .foregroundColor(TFTextColor)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
-                .padding(.bottom, 5)
-                .font(.system(size: 15, weight: .regular, design: .default))
-            
-            Text("Make it specific and achievable within this session")
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.bottom, 4)
-            
-            Button(action: {
-                showGoalExamples()
-            }) {
-                Text("See example goals")
-                    .font(.caption)
-                    .foregroundColor(.blue)
+                TextField("", text: $goalViewModel.text,
+                          prompt: Text("What do you want to achieve?").foregroundColor(.gray))
+                    .foregroundColor(TFTextColor)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white)
+                            .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+                    )
+                    .font(.system(size: 15, weight: .regular))
+                
+                HStack {
+                    Text("💡 Make it specific and achievable")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                    
+                    Button(action: { showGoalExamples() }) {
+                        Text("See examples")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                    }
+                }
             }
-            .padding(.bottom, textBoxBottomPadding)
+            .padding(.bottom, 10)
 
-            Text("Extraneous thoughts during session:")
-                .font(.system(size: 20, weight: .semibold, design: .default))
-                .foregroundColor(.black)
-                .padding(.bottom, 2)
-            
-            TextField("", text: $currNote,
-                      prompt: Text("Note your extraneous thoughts").foregroundColor(.gray))
-                .foregroundColor(TFTextColor)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.black, style: StrokeStyle(lineWidth: 1.0)))
-                .font(.system(size: 15, weight: .regular, design: .default))
-                .padding(.bottom, 5)
-                .onSubmit {
-                    if (!currNote.isEmpty) {
-                        saveNote()
-                    }
+            // Thoughts Section
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    // Image(systemName: "brain")
+                    //     .foregroundColor(.purple)
+                    Text("Capture Thoughts")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundColor(.black)
                 }
-            
-            Text("Write down your distracting thoughts and come back to them later.")
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.bottom, 8)
-            
+                
+                TextField("", text: $currNote,
+                          prompt: Text("Write down any distracting thoughts...").foregroundColor(.gray))
+                    .foregroundColor(TFTextColor)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.white)
+                            .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+                    )
+                    .font(.system(size: 15, weight: .regular))
+                    .onSubmit { if (!currNote.isEmpty) { saveNote() } }
+                
+                Text("🎯 Focus now, address these thoughts later")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
             if (!notes.isEmpty) {
-                List {
-                    ForEach(notes) {
-                        note in
-                        Text(note.text)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.white)
-                            .cornerRadius(8)
-                            .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
-                            .listRowBackground(Color.pagePigment)
-                            .foregroundColor(.black)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Captured Thoughts")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                    
+                    List {
+                        ForEach(notes) { note in
+                            HStack {
+                                Text("•")
+                                    .foregroundColor(.purple)
+                                Text(note.text)
+                                    .padding(.vertical, 8)
+                            }
+                            .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
+                        }
+                        .onDelete(perform: deleteNote)
                     }
-                    .onDelete(perform: deleteNote)
+                    .frame(height: 200)
+                    .scrollContentBackground(.hidden)
+                    .listStyle(PlainListStyle())
+                    .background(Color.clear)
                 }
-                .frame(height: 200)
-                .scrollContentBackground(.hidden)
-                .listStyle(PlainListStyle())
             }
 
             Spacer()

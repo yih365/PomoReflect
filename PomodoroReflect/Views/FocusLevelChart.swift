@@ -45,17 +45,13 @@ struct FocusLevelChart: View {
     private func getTodayFocusLevels() -> [FocusLevel] {
         let calendar = getLocalCalendar()
         let now = Date()
-        let todayComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        let twentyFourHoursAgo = calendar.date(byAdding: .hour, value: -24, to: now)!
         
-        let todayFocusLevels = focusLevels.filter { level in
-            let levelComponents = calendar.dateComponents([.year, .month, .day], from: level.timestamp)
-            let matches = levelComponents.year == todayComponents.year &&
-                       levelComponents.month == todayComponents.month &&
-                       levelComponents.day == todayComponents.day
-            return matches
+        let recentFocusLevels = focusLevels.filter { level in
+            return level.timestamp >= twentyFourHoursAgo && level.timestamp <= now
         }.sorted(by: { $0.sessionId > $1.sessionId })
         
-        return todayFocusLevels
+        return recentFocusLevels
     }
 
     private var dailyChart: some View {
@@ -127,28 +123,26 @@ struct FocusLevelChart: View {
         
         // Group focus levels by week
         let grouped = Dictionary(grouping: focusLevels) { level in
-            print(level.timestamp)
             return calendar.dateComponents([.weekOfYear, .year], from: level.timestamp)
         }
         
-        // Sort weeks chronologically
         let sortedWeeks = grouped.keys.sorted { comp1, comp2 in
-            guard let date1 = calendar.date(from: comp1),
-                  let date2 = calendar.date(from: comp2) else {
-                return false
+            // First compare years
+            if comp1.year != comp2.year {
+                return (comp1.year ?? 0) < (comp2.year ?? 0)
             }
-            return date1 > date2
+            
+            // If same year, compare weeks
+            return (comp1.weekOfYear ?? 0) < (comp2.weekOfYear ?? 0)
         }
         
-        // Take last n weeks (n = max(50, number of weeks))
-        let numberOfWeeks = min(sortedWeeks.count, max(50, sortedWeeks.count))
-        let weeksToShow = Array(sortedWeeks.prefix(numberOfWeeks))
+        // Take last n weeks
+        let numberOfWeeks = min(sortedWeeks.count, max(52, sortedWeeks.count))
+        let weeksToShow = Array(sortedWeeks.suffix(numberOfWeeks))
         
         return weeksToShow.enumerated().map { index, weekComp in
             let levels = grouped[weekComp] ?? []
             let average = Double(levels.map(\.level).reduce(0, +)) / Double(levels.count)
-            
-            // Format week label (e.g., "W1")
             let weekLabel = "W\(numberOfWeeks - index)"
             
             return WeeklyFocusData(
