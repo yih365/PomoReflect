@@ -26,7 +26,6 @@
 * Widget to open app (screen shows the focus timer amount)
 
 ### Bugs
-* auto started break when app not open, live activity suck in load?
 
 ### In progress:
 

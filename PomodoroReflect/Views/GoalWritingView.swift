@@ -119,6 +119,7 @@ struct GoalWritingView: View {
                                 Text("•")
                                     .foregroundColor(.purple)
                                 Text(note.text)
+                                    .foregroundColor(.black)
                                     .padding(.vertical, 8)
                             }
                             .listRowBackground(Color.clear)
