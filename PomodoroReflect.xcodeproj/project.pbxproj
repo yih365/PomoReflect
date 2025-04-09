@@ -125,7 +125,7 @@
 		4BD664E22D70D92500E86A63 /* Exceptions for "PomodoroReflect" folder in "PomoWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Assets/logo.png,
+				Assets/logo.jpg,
 				Models/TimerFunctionality.swift,
 			);
 			target = 4B9265022D6695DB0034A270 /* PomoWidgetExtension */;
