@@ -17,8 +17,8 @@ class Notifs {
         let content = UNMutableNotificationContent()
         content.title = "Pomodoro Timer"
         content.body = "Timer Ended! Log your focus level!"
-        content.sound = .none
-        content.categoryIdentifier = "bannerCategory"
+        content.sound = UNNotificationSound.default
+        content.categoryIdentifier = "timerEnd"
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(0.1), repeats: false)
         let request = UNNotificationRequest(identifier: "PomodoroTimer_pomo_alert", content: content, trigger: trigger)
@@ -32,7 +32,7 @@ class Notifs {
     
     static func requestNotificationPermission() {
         print("requesting notification permission")
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .provisional]) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .alert, .sound]) { granted, error in
             if let error = error {
                 print("Error requesting notification permission: \(error.localizedDescription)")
             } else if granted {

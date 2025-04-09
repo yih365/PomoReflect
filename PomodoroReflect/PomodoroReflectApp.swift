@@ -180,6 +180,15 @@ struct PomodoroReflectApp: App {
                     if (popupManager.isPopupVisible) {
                         VStack {
                             FocusLogView()
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("1 - Could barely focus on the task")
+                                Text("3 - Mostly focused but with some distracting thoughts")
+                                Text("5 - Little to no distracting thoughts")
+                            }
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                            .padding(.top, 8)
                         }
                         .modelContainer(sharedModelContainer)
                         .frame(width: 300)
